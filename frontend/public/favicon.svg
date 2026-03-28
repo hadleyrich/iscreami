@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Ice cream scoop -->
+    <circle cx="12" cy="8" r="6" fill="#ec4899" stroke="none" />
+    <!-- Cone -->
+    <path d="M8 14 L16 14 L12 22 Z" fill="none" stroke="#d4a574" stroke-width="2" />
+</svg>

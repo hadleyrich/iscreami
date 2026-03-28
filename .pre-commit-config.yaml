@@ -1,0 +1,31 @@
+repos:
+- repo: local
+  hooks:
+  - id: frontend-type-check
+    name: Frontend TypeScript type check
+    entry: bash -c 'cd frontend && pnpm tsc --noEmit'
+    language: system
+    stages: [pre-commit]
+    pass_filenames: false
+    always_run: true
+  - id: frontend-lint
+    name: Frontend ESLint
+    entry: bash -c 'cd frontend && pnpm lint'
+    language: system
+    stages: [pre-commit]
+    pass_filenames: false
+    always_run: true
+  - id: backend-ruff-check
+    name: Backend ruff check
+    entry: bash -c 'cd backend && uv run ruff check .'
+    language: system
+    stages: [pre-commit]
+    pass_filenames: false
+    always_run: true
+  - id: backend-ruff-format
+    name: Backend ruff format
+    entry: bash -c 'cd backend && uv run ruff format --check .'
+    language: system
+    stages: [pre-commit]
+    pass_filenames: false
+    always_run: true

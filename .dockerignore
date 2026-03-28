@@ -1,0 +1,32 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+**/.venv/
+.env
+**/.env
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+**/.pytest_cache/
+.ruff_cache/
+**/.ruff_cache/
+htmlcov/
+backend/htmlcov/
+node_modules/
+frontend/dist/
+*.png
+*.html
+*.json
+!frontend/package.json
+!frontend/package-lock.json
+!frontend/tsconfig*.json
+!frontend/vite.config.ts
+!backend/pyproject.toml
+!backend/alembic.ini
+PAC discussion.txt
+What PAC Is*
+FoodData_Central*
+image*.png

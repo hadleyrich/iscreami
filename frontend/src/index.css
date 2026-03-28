@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@custom-variant dark (&:is(.dark *));
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+}
+
+/* Configure DaisyUI primary as pink to match the app design */
+:root,
+[data-theme="light"] {
+  --color-primary: oklch(0.656 0.178 353);
+  --color-primary-content: oklch(1 0 0);
+}
+
+[data-theme="dark"] {
+  --color-primary: oklch(0.718 0.152 350);
+  --color-primary-content: oklch(0.15 0.02 350);
+}
