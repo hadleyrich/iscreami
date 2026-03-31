@@ -44,7 +44,7 @@ Requires PostgreSQL and is served from a single Docker container:
 cp .env.example .env
 # Set DATABASE_URL in .env, then:
 docker build -t iscreami .
-docker run -e DATABASE_URL=postgresql://user:pass@db:5432/iscreami -p 8000:8000 iscreami
+docker run -e DATABASE_URL=postgresql+psycopg://user:pass@db:5432/iscreami -p 8000:8000 iscreami
 ```
 
 Open **http://localhost:8000** in your browser.
