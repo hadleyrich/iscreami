@@ -24,7 +24,7 @@ dependencies = [
     "pydantic-settings>=2.0",
     "python-multipart>=0.0.22",
     "uvicorn>=0.34",
-    "typer>=0.15",
+    "typer>=0.24.1",
     "ijson>=3.5.0",
 ]
 
