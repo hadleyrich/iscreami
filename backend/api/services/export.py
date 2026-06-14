@@ -71,13 +71,6 @@ def build_export_single(
     )
 
 
-def build_export_batch(
-    recipes: list[Recipe],
-) -> list[RecipeExportOut]:
-    """Export multiple recipes. Returns array of export models."""
-    return [build_export_single(recipe) for recipe in recipes]
-
-
 def normalize_import_data(raw_json: dict | list) -> list[dict]:
     """Normalize import data: if object, wrap in array; if array, return as-is."""
     if isinstance(raw_json, list):
