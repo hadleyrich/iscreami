@@ -11,3 +11,6 @@
 
 ## 2026-06-15
 - Added Cache-Control headers to Vite-built static assets — immutable (1yr) for /assets/*, no-cache for index.html — opened PR #23
+
+## 2026-06-16
+- Configured React Query QueryClient defaults: staleTime=30s, refetchOnWindowFocus=false, retry=1 — prevents unnecessary API refetches on every page navigation; mutations already invalidate caches so data freshness is preserved — opened PR #29

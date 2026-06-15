@@ -11,7 +11,15 @@ import { useTheme, type Theme } from "./hooks/useTheme";
 import { ToastProvider } from "./hooks/ToastProvider";
 import { IceCreamCone, Menu, X } from "lucide-react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000, // data is fresh for 30s — avoids refetch on navigation
+      refetchOnWindowFocus: false, // prevents refetch on tab switch
+      retry: 1, // one retry is enough for these endpoints
+    },
+  },
+});
 
 const navActive =
   "px-3 py-1.5 text-sm rounded-md font-medium bg-primary/10 text-primary";
