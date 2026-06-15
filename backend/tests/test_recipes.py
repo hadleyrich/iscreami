@@ -34,6 +34,5 @@ class TestImportRecipes:
 
         assert exc_info.value.status_code == 400  # type: ignore[union-attr]
         assert (
-            "size could not be determined"
-            in exc_info.value.detail.lower()  # type: ignore[union-attr]
+            "size could not be determined" in exc_info.value.detail.lower()  # type: ignore[union-attr]
         )
