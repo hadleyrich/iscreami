@@ -4,6 +4,15 @@ from __future__ import annotations
 
 import pytest
 
+from api.schemas import MetricStatus, PACResult
+from api.services.calculator import (
+    calculate,
+    calculate_freezing,
+    calculate_nutrition,
+    calculate_pac,
+    calculate_sweetness,
+    compare_to_target,
+)
 from tests.conftest import make_ingredient, make_profile
 
 
@@ -49,8 +58,6 @@ def _make_freezing(serving_temp: float | None = -12.0):
 
 class TestCalculatePAC:
     def test_returns_pac_result_schema(self):
-        from api.schemas import PACResult
-        from api.services.calculator import calculate_pac
 
         sugar = make_ingredient(sucrose_pct=100.0, water_pct=0.0)
         result = calculate_pac([(sugar, 100.0)])  # type: ignore[arg-type]
@@ -58,14 +65,12 @@ class TestCalculatePAC:
         assert result.pac_mix > 0
 
     def test_no_water_pac_water_is_none(self):
-        from api.services.calculator import calculate_pac
 
         fat = make_ingredient(total_fat_pct=100.0)
         result = calculate_pac([(fat, 100.0)])  # type: ignore[arg-type]
         assert result.pac_water is None
 
     def test_values_are_rounded(self):
-        from api.services.calculator import calculate_pac
 
         sugar = make_ingredient(sucrose_pct=99.8, water_pct=0.03)
         water = make_ingredient(water_pct=100.0)
@@ -76,8 +81,6 @@ class TestCalculatePAC:
 
 class TestCalculateFreezing:
     def test_zero_pac_gives_zero_freezing_point(self):
-        from api.schemas import PACResult
-        from api.services.calculator import calculate_freezing
 
         comp = _make_composition(water_pct=60.0, total_solids_pct=40.0)
         result = calculate_freezing(PACResult(pac_mix=0.0, pac_water=0.0), comp)
@@ -85,8 +88,6 @@ class TestCalculateFreezing:
         assert result.serving_temperature_c is None
 
     def test_none_pac_water_gives_zero_freezing_point(self):
-        from api.schemas import PACResult
-        from api.services.calculator import calculate_freezing
 
         comp = _make_composition()
         result = calculate_freezing(PACResult(pac_mix=5.0, pac_water=None), comp)
@@ -94,8 +95,6 @@ class TestCalculateFreezing:
         assert result.serving_temperature_c is None
 
     def test_positive_pac_gives_negative_freezing_point(self):
-        from api.schemas import PACResult
-        from api.services.calculator import calculate_freezing
 
         comp = _make_composition(water_pct=80.0)
         result = calculate_freezing(PACResult(pac_mix=15.0, pac_water=25.0), comp)
@@ -104,8 +103,6 @@ class TestCalculateFreezing:
         assert result.serving_temperature_c < result.freezing_point_c
 
     def test_curve_is_populated(self):
-        from api.schemas import PACResult
-        from api.services.calculator import calculate_freezing
 
         comp = _make_composition(water_pct=80.0)
         result = calculate_freezing(PACResult(pac_mix=15.0, pac_water=25.0), comp)
@@ -114,7 +111,6 @@ class TestCalculateFreezing:
 
 class TestCalculateSweetness:
     def test_breakdown_percentages_sum_to_100(self):
-        from api.services.calculator import calculate_sweetness
 
         a = make_ingredient(name="A", sucrose_pct=50.0)
         b = make_ingredient(name="B", sucrose_pct=50.0)
@@ -124,7 +120,6 @@ class TestCalculateSweetness:
         assert total_pct == pytest.approx(100.0)
 
     def test_simple_mode_fallback_in_breakdown(self):
-        from api.services.calculator import calculate_sweetness
 
         ing = make_ingredient(name="Syrup", total_sugar_pct=80.0)
         result = calculate_sweetness([(ing, 100.0)])  # type: ignore[arg-type]
@@ -134,7 +129,6 @@ class TestCalculateSweetness:
         assert result.sweetener_breakdown[0].weight_g == pytest.approx(80.0)
 
     def test_no_sweetener_gives_empty_breakdown(self):
-        from api.services.calculator import calculate_sweetness
 
         ing = make_ingredient(name="Cream", total_fat_pct=35.0)
         result = calculate_sweetness([(ing, 100.0)])  # type: ignore[arg-type]
@@ -143,7 +137,6 @@ class TestCalculateSweetness:
         assert result.pod == pytest.approx(0.0)
 
     def test_pod_value(self):
-        from api.services.calculator import calculate_sweetness
 
         ing = make_ingredient(name="Sugar", sucrose_pct=100.0)
         result = calculate_sweetness([(ing, 100.0)])  # type: ignore[arg-type]
@@ -152,7 +145,6 @@ class TestCalculateSweetness:
 
 class TestCalculateNutrition:
     def test_per_serving_scales_from_per_100g(self):
-        from api.services.calculator import calculate_nutrition
 
         ing = make_ingredient(energy_kj_per_100g=400.0)
         result = calculate_nutrition([(ing, 100.0)], serving_size_g=50.0)  # type: ignore[arg-type]
@@ -162,7 +154,6 @@ class TestCalculateNutrition:
         assert result.serving_size_g == pytest.approx(50.0)
 
     def test_two_ingredients_weighted_correctly(self):
-        from api.services.calculator import calculate_nutrition
 
         a = make_ingredient(energy_kj_per_100g=100.0)
         b = make_ingredient(energy_kj_per_100g=0.0)
@@ -171,7 +162,6 @@ class TestCalculateNutrition:
         assert result.per_100g["energy_kj"] == pytest.approx(20.0)
 
     def test_none_nutrients_excluded_from_sum(self):
-        from api.services.calculator import calculate_nutrition
 
         a = make_ingredient(protein_pct=10.0)
         b = make_ingredient()
@@ -181,7 +171,6 @@ class TestCalculateNutrition:
         assert result.per_100g["protein_g"] == pytest.approx(5.0)
 
     def test_all_nutrient_keys_present(self):
-        from api.services.calculator import calculate_nutrition
 
         ing = make_ingredient()
         result = calculate_nutrition([(ing, 100.0)])  # type: ignore[arg-type]
@@ -200,7 +189,6 @@ class TestCalculateNutrition:
         assert expected_keys == set(result.per_serving.keys())
 
     def test_default_serving_size_is_66g(self):
-        from api.services.calculator import calculate_nutrition
 
         ing = make_ingredient(energy_kj_per_100g=200.0)
         result = calculate_nutrition([(ing, 100.0)])  # type: ignore[arg-type]
@@ -210,8 +198,6 @@ class TestCalculateNutrition:
 
 class TestCompareToTarget:
     def test_all_in_range(self):
-        from api.schemas import MetricStatus
-        from api.services.calculator import compare_to_target
 
         profile = make_profile(
             total_solids_min=35.0,
@@ -227,8 +213,6 @@ class TestCompareToTarget:
         assert by_metric["total_fat"].status == MetricStatus.in_range
 
     def test_below_minimum(self):
-        from api.schemas import MetricStatus
-        from api.services.calculator import compare_to_target
 
         profile = make_profile(total_solids_min=50.0)
         results = compare_to_target(
@@ -238,8 +222,6 @@ class TestCompareToTarget:
         assert by_metric["total_solids"].status == MetricStatus.below
 
     def test_above_maximum(self):
-        from api.schemas import MetricStatus
-        from api.services.calculator import compare_to_target
 
         profile = make_profile(total_fat_max=5.0)
         results = compare_to_target(
@@ -249,8 +231,6 @@ class TestCompareToTarget:
         assert by_metric["total_fat"].status == MetricStatus.above
 
     def test_no_bounds_is_in_range(self):
-        from api.schemas import MetricStatus
-        from api.services.calculator import compare_to_target
 
         profile = make_profile()  # all None
         results = compare_to_target(
@@ -260,7 +240,6 @@ class TestCompareToTarget:
             assert r.status == MetricStatus.in_range
 
     def test_all_nine_metrics_present(self):
-        from api.services.calculator import compare_to_target
 
         profile = make_profile()
         results = compare_to_target(
@@ -280,8 +259,6 @@ class TestCompareToTarget:
         }
 
     def test_serving_temp_none_treated_as_zero(self):
-        from api.schemas import MetricStatus
-        from api.services.calculator import compare_to_target
 
         profile = make_profile(serving_temp_min=-5.0, serving_temp_max=5.0)
         results = compare_to_target(
@@ -295,7 +272,6 @@ class TestCompareToTarget:
         assert by_metric["serving_temp"].status == MetricStatus.in_range
 
     def test_metric_comparison_includes_value_and_bounds(self):
-        from api.services.calculator import compare_to_target
 
         profile = make_profile(total_fat_min=5.0, total_fat_max=15.0)
         results = compare_to_target(
@@ -309,7 +285,6 @@ class TestCompareToTarget:
 
 class TestCalculate:
     def test_basic_calculation(self):
-        from api.services.calculator import calculate
 
         sugar = make_ingredient(
             name="Sugar",
@@ -344,7 +319,6 @@ class TestCalculate:
         assert result.nutrition.per_100g["energy_kj"] > 0
 
     def test_with_target_profile(self):
-        from api.services.calculator import calculate
 
         sugar = make_ingredient(
             name="Sugar", sucrose_pct=99.8, water_pct=0.03, total_sugar_pct=99.8
@@ -366,14 +340,12 @@ class TestCalculate:
         assert "sweetness" in metrics
 
     def test_no_target_profile_gives_none_comparison(self):
-        from api.services.calculator import calculate
 
         ing = make_ingredient(name="Water", water_pct=100.0)
         result = calculate([(ing, 500.0)])  # type: ignore[arg-type]
         assert result.target_comparison is None
 
     def test_custom_serving_size(self):
-        from api.services.calculator import calculate
 
         ing = make_ingredient(
             name="Sugar", sucrose_pct=100.0, energy_kj_per_100g=1600.0

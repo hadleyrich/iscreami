@@ -5,88 +5,72 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 
 import pytest
+from sqlalchemy.orm import Session
+
+from api.models import TargetProfile
+from api.services.export import (
+    build_export_single,
+    create_recipes_from_import,
+    normalize_import_data,
+    resolve_or_create_target_profile,
+    validate_import_data,
+)
 
 
 class TestNormalizeImportData:
     def test_single_object_wrapped_in_list(self):
-        from api.services.export import normalize_import_data
-
         data = {"name": "Test Recipe"}
         assert normalize_import_data(data) == [data]
 
     def test_list_returned_unchanged(self):
-        from api.services.export import normalize_import_data
-
         data = [{"name": "Recipe 1"}, {"name": "Recipe 2"}]
         assert normalize_import_data(data) == data
 
     def test_empty_list_returned_unchanged(self):
-        from api.services.export import normalize_import_data
-
         assert normalize_import_data([]) == []
 
     def test_invalid_type_raises_value_error(self):
-        from api.services.export import normalize_import_data
-
         with pytest.raises(ValueError):
             normalize_import_data("invalid")  # type: ignore[arg-type]
 
     def test_none_raises_value_error(self):
-        from api.services.export import normalize_import_data
-
         with pytest.raises(ValueError):
             normalize_import_data(None)  # type: ignore[arg-type]
 
     def test_integer_raises_value_error(self):
-        from api.services.export import normalize_import_data
-
         with pytest.raises(ValueError):
             normalize_import_data(42)  # type: ignore[arg-type]
 
 
 class TestValidateImportData:
     def _db(self):
-        from sqlalchemy.orm import Session
-
         return MagicMock(spec=Session)
 
     def test_empty_list_rejected(self):
-        from api.services.export import validate_import_data
-
         errors = validate_import_data([], self._db())
         assert len(errors) > 0
         assert any("at least one recipe" in e for e in errors)
 
     def test_missing_name_rejected(self):
-        from api.services.export import validate_import_data
-
         errors = validate_import_data([{"ingredients": []}], self._db())
         assert any("name is required" in e for e in errors)
 
     def test_empty_name_rejected(self):
-        from api.services.export import validate_import_data
-
         errors = validate_import_data([{"name": "", "ingredients": []}], self._db())
         assert any("name is required" in e for e in errors)
 
     def test_valid_recipe_no_ingredients(self):
-        from api.services.export import validate_import_data
-
         errors = validate_import_data(
             [{"name": "Simple", "ingredients": []}], self._db()
         )
         assert errors == []
 
     def test_missing_ingredient_id_rejected(self):
-        from api.services.export import validate_import_data
-
         data = [{"name": "Test", "ingredients": [{"weight_grams": 100}]}]
         errors = validate_import_data(data, self._db())
         assert any("ingredient_id is required" in e for e in errors)
 
     def test_invalid_uuid_rejected(self):
-        from api.services.export import validate_import_data
-
         data = [
             {
                 "name": "Test",
@@ -97,8 +81,6 @@ class TestValidateImportData:
         assert any("invalid UUID" in e for e in errors)
 
     def test_negative_weight_rejected(self):
-        from api.services.export import validate_import_data
-
         data = [
             {
                 "name": "Test",
@@ -114,8 +96,6 @@ class TestValidateImportData:
         assert any("positive number" in e for e in errors)
 
     def test_zero_weight_rejected(self):
-        from api.services.export import validate_import_data
-
         data = [
             {
                 "name": "Test",
@@ -131,8 +111,6 @@ class TestValidateImportData:
         assert any("positive number" in e for e in errors)
 
     def test_missing_weight_grams_rejected(self):
-        from api.services.export import validate_import_data
-
         data = [
             {
                 "name": "Test",
@@ -145,8 +123,6 @@ class TestValidateImportData:
         assert any("weight_grams is required" in e for e in errors)
 
     def test_ingredient_not_found_in_db_rejected(self):
-        from api.services.export import validate_import_data
-
         db = self._db()
         # Simulate DB returning nothing for scalars().first()
         db.scalars.return_value.first.return_value = None
@@ -166,16 +142,12 @@ class TestValidateImportData:
         assert any("ingredient not found" in e for e in errors)
 
     def test_multiple_recipes_accumulates_errors(self):
-        from api.services.export import validate_import_data
-
         data = [{"ingredients": []}, {"ingredients": []}]  # both missing name
         errors = validate_import_data(data, self._db())
         # Should have at least one error per recipe
         assert len([e for e in errors if "name is required" in e]) >= 2
 
     def test_ingredients_not_list_rejected(self):
-        from api.services.export import validate_import_data
-
         data = [{"name": "Test", "ingredients": "not-a-list"}]
         errors = validate_import_data(data, self._db())
         assert any("ingredients must be an array" in e for e in errors)
@@ -183,32 +155,21 @@ class TestValidateImportData:
 
 class TestResolveOrCreateTargetProfile:
     def _db(self):
-        from sqlalchemy.orm import Session
-
         return MagicMock(spec=Session)
 
     def test_none_profile_data_returns_none(self):
-        from api.services.export import resolve_or_create_target_profile
-
         assert resolve_or_create_target_profile(None, self._db()) is None
 
     def test_empty_dict_returns_none(self):
-        from api.services.export import resolve_or_create_target_profile
-
         assert resolve_or_create_target_profile({}, self._db()) is None
 
     def test_profile_without_name_returns_none(self):
-        from api.services.export import resolve_or_create_target_profile
-
         assert (
             resolve_or_create_target_profile({"total_solids_min": 30}, self._db())
             is None
         )
 
     def test_existing_profile_returned_without_creating(self):
-        from api.models import TargetProfile
-        from api.services.export import resolve_or_create_target_profile
-
         db = self._db()
         existing = MagicMock(spec=TargetProfile)
         db.scalars.return_value.first.return_value = existing
@@ -219,8 +180,6 @@ class TestResolveOrCreateTargetProfile:
         db.add.assert_not_called()
 
     def test_new_profile_created_when_not_found(self):
-        from api.services.export import resolve_or_create_target_profile
-
         db = self._db()
         db.scalars.return_value.first.return_value = None
 
@@ -245,10 +204,6 @@ class TestRoundTrip:
         db_recipe_factory,
     ):
         """Export a recipe with target profile, import it, verify it's the same."""
-        from api.services.export import (
-            build_export_single,
-            create_recipes_from_import,
-        )
 
         # Create ingredients
         ing1 = db_ingredient_factory(
@@ -327,7 +282,6 @@ class TestRoundTrip:
         db_ingredient_factory,
     ):
         """If ingredient_id is stale, import should resolve by source/source_id."""
-        from api.services.export import create_recipes_from_import, validate_import_data
 
         ingredient = db_ingredient_factory(
             name="Oil, canola, composite",
