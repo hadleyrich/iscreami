@@ -4,53 +4,47 @@ from __future__ import annotations
 
 import pytest
 
+from api.services.pac import ingredient_pac, recipe_pac
 from tests.conftest import make_ingredient
 
 
 class TestIngredientPAC:
     def test_pure_sucrose(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(sucrose_pct=99.8)
         assert abs(ingredient_pac(ing) - 99.8) < 0.01
 
     def test_pure_dextrose(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(glucose_pct=91.0)
         # 91.0 * 190 / 100 = 172.9
         assert abs(ingredient_pac(ing) - 172.9) < 0.01
 
     def test_pure_fructose(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(fructose_pct=50.0)
         # 50.0 * 190 / 100 = 95.0
         assert abs(ingredient_pac(ing) - 95.0) < 0.01
 
     def test_pure_lactose(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(lactose_pct=100.0)
         # lactose factor = 100 (same as sucrose)
         assert abs(ingredient_pac(ing) - 100.0) < 0.01
 
     def test_pure_maltose(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(maltose_pct=100.0)
         # maltose factor = 100
         assert abs(ingredient_pac(ing) - 100.0) < 0.01
 
     def test_pure_galactose(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(galactose_pct=100.0)
         # galactose factor = 190
         assert abs(ingredient_pac(ing) - 190.0) < 0.01
 
     def test_whole_milk(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(
             name="Whole Milk (3.25%)",
@@ -64,32 +58,27 @@ class TestIngredientPAC:
         assert 5.0 < pac < 6.0, f"Whole milk PAC should be ~5.4, got {pac}"
 
     def test_pac_override_takes_precedence(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(pac_override=42.0, sucrose_pct=99.0)
         assert ingredient_pac(ing) == pytest.approx(42.0)
 
     def test_pac_override_zero(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(pac_override=0.0, sucrose_pct=50.0)
         assert ingredient_pac(ing) == pytest.approx(0.0)
 
     def test_simple_mode_fallback_total_sugar(self):
         """When no sugar breakdown present, total_sugar_pct is treated as sucrose."""
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(total_sugar_pct=50.0)
         assert abs(ingredient_pac(ing) - 50.0) < 0.01
 
     def test_no_sugars_returns_zero(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient()  # all None
         assert ingredient_pac(ing) == pytest.approx(0.0)
 
     def test_sodium_contribution(self):
-        from api.services.pac import ingredient_pac
 
         # 100 mg/100g sodium → 0.1g * 2.58 * 585 / 100 = 1.5093
         ing = make_ingredient(sodium_mg=100.0)
@@ -97,14 +86,12 @@ class TestIngredientPAC:
         assert abs(pac - 1.5093) < 0.01
 
     def test_ethanol(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(alcohol_pct=40.0)
         # 40 * 743 / 100 = 297.2
         assert abs(ingredient_pac(ing) - 297.2) < 0.01
 
     def test_combined_sugars_and_sodium(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(sucrose_pct=50.0, fructose_pct=20.0, sodium_mg=50.0)
         # sucrose: 50*100/100=50, fructose: 20*190/100=38, sodium: 0.05*2.58*585/100≈0.754
@@ -112,19 +99,16 @@ class TestIngredientPAC:
         assert abs(ingredient_pac(ing) - expected) < 0.01
 
     def test_zero_sodium_ignored(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(sucrose_pct=50.0, sodium_mg=0.0)
         assert abs(ingredient_pac(ing) - 50.0) < 0.01
 
     def test_zero_alcohol_ignored(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(sucrose_pct=50.0, alcohol_pct=0.0)
         assert abs(ingredient_pac(ing) - 50.0) < 0.01
 
     def test_erythritol_via_override(self):
-        from api.services.pac import ingredient_pac
 
         ing = make_ingredient(pac_override=280.0)
         assert abs(ingredient_pac(ing) - 280.0) < 0.01
@@ -132,7 +116,6 @@ class TestIngredientPAC:
 
 class TestRecipePAC:
     def test_two_ingredient_recipe(self):
-        from api.services.pac import recipe_pac
 
         sugar = make_ingredient(sucrose_pct=99.8, water_pct=0.03)
         water = make_ingredient(water_pct=100.0)
@@ -149,21 +132,18 @@ class TestRecipePAC:
         assert abs(pac_water - 24.95) < 0.1
 
     def test_pac_water_none_when_no_water_in_mix(self):
-        from api.services.pac import recipe_pac
 
         fat = make_ingredient(total_fat_pct=100.0)
         _, pac_water = recipe_pac([(fat, 100.0)])  # type: ignore[arg-type]
         assert pac_water is None
 
     def test_empty_items_returns_zero(self):
-        from api.services.pac import recipe_pac
 
         pac_mix, pac_water = recipe_pac([])
         assert pac_mix == pytest.approx(0.0)
         assert pac_water is None
 
     def test_single_pure_water_ingredient(self):
-        from api.services.pac import recipe_pac
 
         water = make_ingredient(water_pct=100.0)
         pac_mix, pac_water = recipe_pac([(water, 500.0)])  # type: ignore[arg-type]
@@ -173,7 +153,6 @@ class TestRecipePAC:
 
     def test_pac_mix_scales_with_weight(self):
         """Doubling weights should not change pac_mix (it's a concentration)."""
-        from api.services.pac import recipe_pac
 
         sugar = make_ingredient(sucrose_pct=100.0, water_pct=0.0)
         water = make_ingredient(water_pct=100.0)
