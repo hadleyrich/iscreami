@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Maximize2, X } from "lucide-react";
 import type { FreezingResult, TargetProfile } from "../types";
 import {
@@ -179,6 +179,16 @@ function ScoopabilityBanner({ servingTemp }: { readonly servingTemp: number }) {
 export function FreezingSection({ freezing, profile }: FreezingSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Dismiss expanded modal with Escape key
+  useEffect(() => {
+    if (!isExpanded) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setIsExpanded(false);
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isExpanded]);
+
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -259,13 +269,23 @@ export function FreezingSection({ freezing, profile }: FreezingSectionProps) {
 
       {/* Expanded modal */}
       {isExpanded && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-base-100 rounded-lg shadow-2xl w-full h-full max-h-[90vh] flex flex-col">
+        <div
+          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Freezing curve"
+          onClick={() => setIsExpanded(false)}
+        >
+          <div
+            className="bg-base-100 rounded-lg shadow-2xl w-full h-full max-h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-base-200 p-4">
               <h2 className="text-lg font-semibold">Freezing Curve</h2>
               <button
                 onClick={() => setIsExpanded(false)}
                 className="btn btn-sm btn-circle btn-ghost"
+                aria-label="Close expanded chart"
               >
                 <X className="w-4 h-4" />
               </button>
