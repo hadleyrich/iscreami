@@ -77,9 +77,15 @@ app.add_middleware(
 )
 
 # Security headers — defence in depth for all responses (API + SPA)
+# SHA-256 hash of the inline anti-FOUC script in frontend/index.html.
+# If that script changes, regenerate the hash with:
+#   sed -n '/<script>/{:a;n;/</script>/b;H;ba};x;s/\\n//g' frontend/index.html \
+#     | openssl dgst -sha256 -binary | base64
+_INLINE_THEME_HASH = "sha256-Qs7CjKlg3pe+cAaS/pVGsJaqX+REVCim7a2AbB8z2WA="
+
 CSP = (
     "default-src 'self'; "
-    "script-src 'self' 'unsafe-inline'; "
+    f"script-src 'self' {_INLINE_THEME_HASH}; "
     "style-src 'self' 'unsafe-inline'; "
     "img-src 'self' data:; "
     "connect-src 'self'; "
