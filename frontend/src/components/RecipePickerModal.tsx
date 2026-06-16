@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { X, IceCreamCone } from "lucide-react";
@@ -16,6 +17,16 @@ export function RecipePickerModal({ open, onClose }: Readonly<Props>) {
         enabled: open,
     });
 
+    // Dismiss with Escape key
+    useEffect(() => {
+        if (!open) return;
+        function onKeyDown(e: KeyboardEvent) {
+            if (e.key === "Escape") onClose();
+        }
+        document.addEventListener("keydown", onKeyDown);
+        return () => document.removeEventListener("keydown", onKeyDown);
+    }, [open, onClose]);
+
     function handleSelectRecipe(recipeId: string) {
         navigate(`/calculator/${recipeId}`);
         onClose();
@@ -24,7 +35,7 @@ export function RecipePickerModal({ open, onClose }: Readonly<Props>) {
     if (!open) return null;
 
     return (
-        <div className="modal modal-open">
+        <div className="modal modal-open" role="dialog" aria-modal="true" aria-label="Load recipe">
             <div className="modal-box max-w-md">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="font-bold text-lg">Load Recipe</h3>
