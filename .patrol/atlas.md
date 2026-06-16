@@ -3,6 +3,9 @@
 ## 2026-06-16
 - Consolidate ~146 inline imports to module level across 6 test files — opened PR #30
 
+## 2026-06-17
+- Redundant side-effect import in `cli/main.py` (`from api.settings import settings  # noqa: F401`) — opened PR #33
+
 ## 2026-06-15
 - Dead code: `build_export_batch` function in `backend/api/services/export.py` — defined but never imported or called anywhere. Opened PR #24.
 
