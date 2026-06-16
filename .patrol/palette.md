@@ -11,3 +11,6 @@
 
 ## 2026-06-15
 - FreezingSection expanded chart modal missing ARIA dialog attributes, Escape key dismissal, backdrop click, and close button aria-label — added role/aria-modal/aria-label, document-level Escape handler, backdrop onClick, and descriptive aria-label on close button — opened PR #27
+
+## 2026-06-16
+- RecipePickerModal missing ARIA dialog attributes and Escape key dismissal — added role/aria-modal/aria-label on outer container and document-level Escape handler — opened PR #31
