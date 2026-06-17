@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
 import { CalculatorView } from "./components/CalculatorView";
@@ -32,6 +32,16 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
   function closeMenu() {
     setMenuOpen(false);
   }
+
+  // Dismiss mobile menu with Escape key
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") closeMenu();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
 
   return (
     <header className="bg-base-100 border-b border-base-200 px-4 py-3">
