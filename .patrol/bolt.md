@@ -17,3 +17,6 @@
 
 ## 2026-06-17
 - Reduced freezing-curve compute overhead by ~50%: halved binary-search iterations (60→30) in `frozen_water_fraction()` and lowered `min_temp` from -40°C to -30°C to match chart Y-axis domain — opened PR #32
+
+## 2026-06-18
+- Skipped — no clear performance bottleneck after inspecting all backend routes (no new N+1), frontend components (no excessive re-renders, proper debounce), calculator service (already optimized in PR #32), and DB schema (acceptable at current scale)
