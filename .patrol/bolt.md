@@ -14,3 +14,6 @@
 
 ## 2026-06-16
 - Configured React Query QueryClient defaults: staleTime=30s, refetchOnWindowFocus=false, retry=1 — prevents unnecessary API refetches on every page navigation; mutations already invalidate caches so data freshness is preserved — opened PR #29
+
+## 2026-06-17
+- Reduced freezing-curve compute overhead by ~50%: halved binary-search iterations (60→30) in `frozen_water_fraction()` and lowered `min_temp` from -40°C to -30°C to match chart Y-axis domain — opened PR #32

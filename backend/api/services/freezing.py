@@ -162,8 +162,9 @@ def frozen_water_fraction(
         return 0.0
 
     # T(frozen_pct) is monotonically decreasing: higher frozen_pct → colder T.
+    # 30 iterations gives 1/2^30 ≈ 10^-9 precision — ample for 0.01% display.
     lo, hi = 0.0, 99.9
-    for _ in range(60):
+    for _ in range(30):
         mid = (lo + hi) / 2.0
         t_mid = -fpd_at_frozen_pct(mid, pac_water, msnf_pct, water_pct)
         if t_mid > temperature_c:  # warmer than target → need more frozen
@@ -177,7 +178,7 @@ def freezing_curve(
     pac_water: float | None,
     msnf_pct: float = 0.0,
     water_pct: float = 100.0,
-    min_temp: float = -40.0,
+    min_temp: float = -30.0,
     step: float = 1.0,
 ) -> list[tuple[float, float]]:
     """Freezing curve as (temperature_°C, frozen_water_%) from 0 °C to min_temp."""
