@@ -2,8 +2,6 @@
 
 import typer
 
-# Settings auto-loads from .env when imported
-from api.settings import settings  # noqa: F401
 from cli.importers import app as import_app
 from cli.seed import app as seed_app
 

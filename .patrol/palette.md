@@ -14,3 +14,6 @@
 
 ## 2026-06-16
 - RecipePickerModal missing ARIA dialog attributes and Escape key dismissal — added role/aria-modal/aria-label on outer container and document-level Escape handler — opened PR #31
+
+## 2026-06-17
+- Mobile hamburger menu missing Escape key dismissal — added useEffect with document-level Escape handler — opened PR #35
