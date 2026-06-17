@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-06-18
+- Remaining inline imports in `test_calculator.py` — opened PR #37
+
 ## 2026-06-16
 - Consolidate ~146 inline imports to module level across 6 test files — opened PR #30
 

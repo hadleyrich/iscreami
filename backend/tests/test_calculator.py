@@ -4,7 +4,13 @@ from __future__ import annotations
 
 import pytest
 
-from api.schemas import MetricStatus, PACResult
+from api.schemas import (
+    CompositionResult,
+    FreezingResult,
+    MetricStatus,
+    PACResult,
+    SweetnessResult,
+)
 from api.services.calculator import (
     calculate,
     calculate_freezing,
@@ -17,8 +23,6 @@ from tests.conftest import make_ingredient, make_profile
 
 
 def _make_composition(**kwargs):
-    from api.schemas import CompositionResult
-
     defaults = {
         "total_weight_g": 1000.0,
         "water_pct": 60.0,
@@ -41,14 +45,10 @@ def _make_composition(**kwargs):
 
 
 def _make_sweetness(pod=18.0):
-    from api.schemas import SweetnessResult
-
     return SweetnessResult(pod=pod, sweetener_breakdown=[])
 
 
 def _make_freezing(serving_temp: float | None = -12.0):
-    from api.schemas import FreezingResult
-
     return FreezingResult(
         freezing_point_c=-2.5,
         serving_temperature_c=serving_temp,
