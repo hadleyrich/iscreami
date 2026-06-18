@@ -173,6 +173,9 @@ class RecipeIngredientInput(BaseModel):
     sort_order: int = 0
 
 
+_MAX_RECIPE_INGREDIENTS = 100
+
+
 class RecipeIngredientOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
@@ -187,7 +190,7 @@ class RecipeCreate(BaseModel):
     description: str | None = None
     recipe_type: str | None = None
     target_profile_id: uuid.UUID | None = None
-    ingredients: list[RecipeIngredientInput] = []
+    ingredients: list[RecipeIngredientInput] = Field(default_factory=list, max_length=_MAX_RECIPE_INGREDIENTS)
 
 
 class RecipeUpdate(BaseModel):
@@ -195,7 +198,9 @@ class RecipeUpdate(BaseModel):
     description: str | None = None
     recipe_type: str | None = None
     target_profile_id: uuid.UUID | None = None
-    ingredients: list[RecipeIngredientInput] | None = None
+    ingredients: list[RecipeIngredientInput] | None = Field(
+        default=None, max_length=_MAX_RECIPE_INGREDIENTS
+    )
 
 
 class RecipeOut(BaseModel):
@@ -231,7 +236,9 @@ class CalculateIngredientInput(BaseModel):
 
 class CalculateRequest(BaseModel):
     target_profile_id: uuid.UUID | None = None
-    ingredients: list[CalculateIngredientInput] = Field(min_length=1)
+    ingredients: list[CalculateIngredientInput] = Field(
+        min_length=1, max_length=_MAX_RECIPE_INGREDIENTS
+    )
     serving_size_g: float = 66.0
 
 
