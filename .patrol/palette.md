@@ -14,3 +14,6 @@
 
 ## 2026-06-17
 - Mobile hamburger menu missing Escape key dismissal — added useEffect with document-level Escape handler — opened PR #35
+
+## 2026-06-18
+- Mobile hamburger menu missing focus management — added focus-to-first-link on open, focus-return-to-button on close — opened PR #38
