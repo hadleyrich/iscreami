@@ -1,5 +1,10 @@
 # Sentinel — Security Patrol Log
 
+## 2026-06-19
+- Added `max_length=100` to `CalculateRequest.ingredients`, `RecipeCreate.ingredients`,
+  and `RecipeUpdate.ingredients` to prevent resource-exhaustion DoS via unbounded
+  ingredient arrays — opened PR #39
+
 ## 2026-06-15
 - Replaced `'unsafe-inline'` in CSP `script-src` with SHA-256 hash of the only
   inline script (anti-FOUC theme script), eliminating CSP bypass — opened PR #28
