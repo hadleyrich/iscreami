@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
 import { CalculatorView } from "./components/CalculatorView";
@@ -28,6 +28,8 @@ const navInactive =
 
 function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Theme) => void }>) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileNavRef = useRef<HTMLDivElement>(null);
 
   function closeMenu() {
     setMenuOpen(false);
@@ -41,6 +43,24 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
     }
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
+  // Focus management: move focus to first link when menu opens,
+  // return focus to hamburger button when menu closes
+  const wasOpenRef = useRef(false);
+  useEffect(() => {
+    if (menuOpen) {
+      wasOpenRef.current = true;
+      // use rAF to let React finish painting the DOM first
+      requestAnimationFrame(() => {
+        const firstLink =
+          mobileNavRef.current?.querySelector<HTMLAnchorElement>("a");
+        firstLink?.focus();
+      });
+    } else if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      menuButtonRef.current?.focus();
+    }
   }, [menuOpen]);
 
   return (
@@ -83,6 +103,7 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
         </div>
         <button
           type="button"
+          ref={menuButtonRef}
           className="md:hidden btn btn-ghost btn-sm"
           onClick={() => setMenuOpen((o) => !o)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -94,7 +115,7 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-base-200 mt-3 pt-3 max-w-7xl mx-auto">
+        <div ref={mobileNavRef} className="md:hidden border-t border-base-200 mt-3 pt-3 max-w-7xl mx-auto">
           <nav className="flex flex-col gap-1 mb-3">
             <NavLink
               to="/calculator"
