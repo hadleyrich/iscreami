@@ -20,3 +20,6 @@
 
 ## 2026-06-18
 - Mobile hamburger menu missing focus management — added focus-to-first-link on open, focus-return-to-button on close — opened PR #38
+
+## 2026-07-02
+- 404 page missing back-to-home navigation — added "Back to Home" link with ArrowLeft icon on the 404 page, styled as primary button — opened PR #62
