@@ -9,7 +9,7 @@ import { HomePage } from "./components/HomePage";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { useTheme, type Theme } from "./hooks/useTheme";
 import { ToastProvider } from "./hooks/ToastProvider";
-import { IceCreamCone, Menu, X } from "lucide-react";
+import { ArrowLeft, IceCreamCone, Menu, X } from "lucide-react";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -173,6 +173,13 @@ function AppContent() {
             <main className="max-w-7xl mx-auto px-4 py-16 text-center">
               <p className="text-4xl font-bold mb-4">404</p>
               <p className="text-base-content/60 mb-6">Page not found.</p>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 btn btn-primary"
+              >
+                <ArrowLeft size={16} />
+                Back to Home
+              </Link>
             </main>
           }
         />
