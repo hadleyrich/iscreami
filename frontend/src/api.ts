@@ -28,7 +28,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     const headers: Record<string, string> = {
         ...(init?.headers as Record<string, string> | undefined),
     };
-    if (init?.body) headers["Content-Type"] = "application/json";
+    if (init?.body && !(init.body instanceof FormData)) headers["Content-Type"] = "application/json";
     const res = await fetch(`${BASE}${path}`, {
         ...init,
         headers,
@@ -153,16 +153,8 @@ export async function exportAllRecipes(): Promise<unknown[]> {
     return request(`/recipes/export-all`);
 }
 
-export async function importRecipes(file: File): Promise<Recipe[]> {
+export function importRecipes(file: File): Promise<Recipe[]> {
     const formData = new FormData();
     formData.append("file", file);
-    const res = await fetch(`${BASE}/recipes/import`, {
-        method: "POST",
-        body: formData,
-    });
-    if (!res.ok) {
-        const body = await res.text();
-        throw new Error(parseErrorMessage(res.status, body));
-    }
-    return res.json();
+    return request("/recipes/import", { method: "POST", body: formData });
 }
