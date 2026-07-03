@@ -95,6 +95,11 @@ CSP = (
     "object-src 'none'"
 )
 
+PERMISSIONS_POLICY = (
+    "geolocation=(), camera=(), microphone=(), payment=(), "
+    "usb=(), serial=(), bluetooth=(), autoplay=(), display-capture=()"
+)
+
 
 @app.middleware("http")
 async def add_security_headers(request, call_next):
@@ -103,6 +108,7 @@ async def add_security_headers(request, call_next):
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = PERMISSIONS_POLICY
     return response
 
 
