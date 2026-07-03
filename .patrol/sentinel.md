@@ -1,5 +1,10 @@
 # Sentinel — Security Patrol Log
 
+## 2026-07-03
+- Added `Permissions-Policy` header to security middleware, disabling unused
+  browser APIs (geolocation, camera, mic, payment, USB, serial, bluetooth, etc.)
+  — opened PR #66
+
 ## 2026-06-19
 - Added `max_length=100` to `CalculateRequest.ingredients`, `RecipeCreate.ingredients`,
   and `RecipeUpdate.ingredients` to prevent resource-exhaustion DoS via unbounded
