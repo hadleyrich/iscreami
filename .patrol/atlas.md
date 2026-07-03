@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-07-04
+- Duplicated data: `SOURCE_LABELS` and `ALL_SOURCES` both defined same key→label mapping — derived `ALL_SOURCES` from `SOURCE_LABELS` via `Object.entries()`, opened PR #72
+
 ## 2026-07-03
 - importRecipes duplicated fetch/error-handling logic because `request()` helper set Content-Type on FormData bodies — fixed both, opened PR #63
 
