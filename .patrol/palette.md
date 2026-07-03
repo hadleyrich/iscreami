@@ -23,3 +23,6 @@
 
 ## 2026-07-02
 - 404 page missing back-to-home navigation — added "Back to Home" link with ArrowLeft icon on the 404 page, styled as primary button — opened PR #62
+
+## 2026-07-03
+- DaisyUI data-tip tooltips invisible to screen readers — added sr-only span to Tooltip component and aria-hidden to InfoIcon HelpCircle icon — opened PR
