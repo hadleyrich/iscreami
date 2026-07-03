@@ -20,6 +20,7 @@ export function InfoIcon({ label, position = "top", className = "" }: InfoIconPr
     <Tooltip content={label} position={position}>
       <HelpCircle
         className={`w-4 h-4 text-base-content/50 hover:text-base-content/70 cursor-help transition-colors ${className}`}
+        aria-hidden="true"
       />
     </Tooltip>
   );
