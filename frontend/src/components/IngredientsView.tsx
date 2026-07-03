@@ -46,14 +46,11 @@ function sourceUrl(source: string, sourceId: string | null): string | null {
   return null;
 }
 
-const ALL_SOURCES = [
-  { value: "seed", label: "Built-in" },
-  { value: "usda", label: "USDA" },
-  { value: "nzfcdb", label: "NZFCDB" },
-  { value: "manual", label: "Custom" },
-];
-
-
+// Derived from SOURCE_LABELS so the two can't drift apart
+const ALL_SOURCES = Object.entries(SOURCE_LABELS).map(([value, label]) => ({
+  value,
+  label,
+}));
 
 export function IngredientsView() {
   const [searchInput, setSearchInput] = useState("");
