@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-07-03
+- importRecipes duplicated fetch/error-handling logic because `request()` helper set Content-Type on FormData bodies — fixed both, opened PR #63
+
 ## 2026-06-18
 - Remaining inline imports in `test_calculator.py` — opened PR #37
 
