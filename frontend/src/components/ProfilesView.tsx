@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { fetchProfiles, deleteProfile } from "../api";
@@ -48,6 +48,16 @@ export function ProfilesView() {
     setEditingProfile(profile);
     setModalOpen(true);
   }
+
+  // Dismiss delete confirm with Escape key
+  useEffect(() => {
+    if (deletingProfile == null) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setDeletingProfile(null);
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [deletingProfile]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
@@ -168,7 +178,7 @@ export function ProfilesView() {
       )}
 
       {/* Delete confirmation */}
-      <dialog className="modal" open={deletingProfile != null}>
+      <dialog className="modal" role="dialog" aria-modal="true" aria-label="Delete profile" open={deletingProfile != null}>
         <div className="modal-box max-w-sm">
           <h3 className="font-bold text-lg">Delete profile?</h3>
           <p className="py-3 text-sm text-base-content/70">

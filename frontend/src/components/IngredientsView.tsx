@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { Search, Plus, Pencil, Trash2 } from "lucide-react";
@@ -86,6 +86,16 @@ export function IngredientsView() {
     setEditingIngredient(ing);
     setModalOpen(true);
   }
+
+  // Dismiss delete confirm with Escape key
+  useEffect(() => {
+    if (deletingIngredient == null) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setDeletingIngredient(null);
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [deletingIngredient]);
 
   const search = useDebouncedValue(searchInput, 300);
 
@@ -384,7 +394,7 @@ export function IngredientsView() {
       )}
 
       {/* Delete confirmation */}
-      <dialog className="modal" open={deletingIngredient != null}>
+      <dialog className="modal" role="dialog" aria-modal="true" aria-label="Delete ingredient" open={deletingIngredient != null}>
         <div className="modal-box max-w-sm">
           <h3 className="font-bold text-lg">Delete ingredient?</h3>
           <p className="py-3 text-sm text-base-content/70">
