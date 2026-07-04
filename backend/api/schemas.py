@@ -35,11 +35,11 @@ class IngredientCategoryOut(BaseModel):
 
 
 class IngredientBase(BaseModel):
-    name: str
-    description: str | None = None
+    name: str = Field(max_length=255)
+    description: str | None = Field(default=None, max_length=2000)
     category_id: int | None = None
-    source: str = "manual"
-    source_id: str | None = None
+    source: str = Field(default="manual", max_length=50)
+    source_id: str | None = Field(default=None, max_length=100)
 
     # Composition per 100g
     water_pct: float | None = None
@@ -128,7 +128,7 @@ class PaginatedIngredients(BaseModel):
 
 
 class TargetProfileBase(BaseModel):
-    name: str
+    name: str = Field(max_length=255)
     serving_temp_min: float | None = None
     serving_temp_max: float | None = None
     sweetness_min: float | None = None
@@ -186,17 +186,17 @@ class RecipeIngredientOut(BaseModel):
 
 
 class RecipeCreate(BaseModel):
-    name: str
-    description: str | None = None
-    recipe_type: str | None = None
+    name: str = Field(max_length=255)
+    description: str | None = Field(default=None, max_length=2000)
+    recipe_type: str | None = Field(default=None, max_length=100)
     target_profile_id: uuid.UUID | None = None
     ingredients: list[RecipeIngredientInput] = Field(default_factory=list, max_length=_MAX_RECIPE_INGREDIENTS)
 
 
 class RecipeUpdate(BaseModel):
-    name: str | None = None
-    description: str | None = None
-    recipe_type: str | None = None
+    name: str | None = Field(default=None, max_length=255)  # type: ignore[assignment]
+    description: str | None = Field(default=None, max_length=2000)
+    recipe_type: str | None = Field(default=None, max_length=100)
     target_profile_id: uuid.UUID | None = None
     ingredients: list[RecipeIngredientInput] | None = Field(
         default=None, max_length=_MAX_RECIPE_INGREDIENTS
@@ -239,7 +239,7 @@ class CalculateRequest(BaseModel):
     ingredients: list[CalculateIngredientInput] = Field(
         min_length=1, max_length=_MAX_RECIPE_INGREDIENTS
     )
-    serving_size_g: float = 66.0
+    serving_size_g: float = Field(default=66.0, gt=0)
 
 
 class CompositionResult(BaseModel):
