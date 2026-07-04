@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash2, X } from "lucide-react";
 import { createProfile, updateProfile } from "../api";
@@ -246,8 +246,18 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
     mutation.mutate(result.data);
   }
 
+  // Dismiss with Escape key
+  useEffect(() => {
+    if (!open) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+
   return (
-    <dialog className="modal modal-bottom sm:modal-middle" open={open}>
+    <dialog className="modal modal-bottom sm:modal-middle" role="dialog" aria-modal="true" aria-label={isEdit ? "Edit profile" : "Create profile"} open={open}>
       <div className="modal-box max-w-2xl max-h-[90vh] flex flex-col p-0 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-base-200 shrink-0">
