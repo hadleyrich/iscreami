@@ -28,10 +28,10 @@ export type IngredientCategory = z.infer<typeof IngredientCategorySchema>;
 
 // Fields the user can create/edit — used for form validation and API payloads
 export const IngredientInputSchema = z.object({
-    name: z.string().min(1, "Name is required"),
+    name: z.string().min(1, "Name is required").max(255, "Name too long"),
     description: z.preprocess(
         (val) => (typeof val === "string" && val.trim() === "" ? null : val),
-        z.string().nullable(),
+        z.string().max(2000, "Description too long").nullable(),
     ),
     category_id: z.preprocess(
         (val) => {
@@ -124,7 +124,7 @@ export const TargetProfileSchema = z.object({
 export type TargetProfile = z.infer<typeof TargetProfileSchema>;
 
 export const TargetProfileInputSchema = z.object({
-    name: z.string().min(1, "Name is required"),
+    name: z.string().min(1, "Name is required").max(255, "Name too long"),
     serving_temp_min: numericNullable,
     serving_temp_max: numericNullable,
     sweetness_min: numericNullable,

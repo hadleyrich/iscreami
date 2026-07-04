@@ -5,6 +5,11 @@
   browser APIs (geolocation, camera, mic, payment, USB, serial, bluetooth, etc.)
   — opened PR #66
 
+## 2026-07-04
+- Added `max_length` constraints to unbounded string fields (name, description,
+  source, recipe_type) and `gt=0` to `serving_size_g` to prevent resource-exhaustion
+  via unbounded inputs — opened PR #74
+
 ## 2026-06-19
 - Added `max_length=100` to `CalculateRequest.ingredients`, `RecipeCreate.ingredients`,
   and `RecipeUpdate.ingredients` to prevent resource-exhaustion DoS via unbounded
