@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Maximize2, X } from "lucide-react";
 import type { FreezingResult, TargetProfile } from "../types";
 import {
@@ -14,6 +14,7 @@ import {
 } from "recharts";
 import { InfoIcon } from "./InfoIcon";
 import { TOOLTIPS } from "../lib/tooltips";
+import { useEscape } from "../hooks/useEscape";
 
 interface FreezingSectionProps {
   readonly freezing: FreezingResult;
@@ -179,15 +180,7 @@ function ScoopabilityBanner({ servingTemp }: { readonly servingTemp: number }) {
 export function FreezingSection({ freezing, profile }: FreezingSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Dismiss expanded modal with Escape key
-  useEffect(() => {
-    if (!isExpanded) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setIsExpanded(false);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [isExpanded]);
+  useEscape(() => setIsExpanded(false), isExpanded);
 
   return (
     <div className="space-y-4">

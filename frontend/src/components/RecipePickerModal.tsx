@@ -1,8 +1,8 @@
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { X, IceCreamCone } from "lucide-react";
 import { fetchRecipes } from "../api";
+import { useEscape } from "../hooks/useEscape";
 
 interface Props {
     open: boolean;
@@ -17,15 +17,7 @@ export function RecipePickerModal({ open, onClose }: Readonly<Props>) {
         enabled: open,
     });
 
-    // Dismiss with Escape key
-    useEffect(() => {
-        if (!open) return;
-        function onKeyDown(e: KeyboardEvent) {
-            if (e.key === "Escape") onClose();
-        }
-        document.addEventListener("keydown", onKeyDown);
-        return () => document.removeEventListener("keydown", onKeyDown);
-    }, [open, onClose]);
+    useEscape(onClose, open);
 
     function handleSelectRecipe(recipeId: string) {
         navigate(`/calculator/${recipeId}`);

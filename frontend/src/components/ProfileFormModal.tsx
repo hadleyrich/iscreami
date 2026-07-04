@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash2, X } from "lucide-react";
 import { createProfile, updateProfile } from "../api";
 import { TargetProfileInputSchema, type TargetProfile, type TargetProfileInput } from "../types";
 import { useToast } from "../hooks/useToast";
+import { useEscape } from "../hooks/useEscape";
 import { fieldErrors, type FieldErrors } from "../lib/validation";
 
 interface Props {
@@ -246,15 +247,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
     mutation.mutate(result.data);
   }
 
-  // Dismiss with Escape key
-  useEffect(() => {
-    if (!open) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  useEscape(onClose, open);
 
   return (
     <dialog className="modal modal-bottom sm:modal-middle" role="dialog" aria-modal="true" aria-label={isEdit ? "Edit profile" : "Create profile"} open={open}>

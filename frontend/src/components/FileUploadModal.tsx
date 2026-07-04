@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Upload, X, AlertCircle, CheckCircle, Loader } from "lucide-react";
+import { useEscape } from "../hooks/useEscape";
 
 interface Props {
   readonly open: boolean;
@@ -26,20 +27,7 @@ export function FileUploadModal({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [internalError, setInternalError] = useState<string | null>(null);
 
-  const onCloseRef = useRef(onClose);
-
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  useEffect(() => {
-    if (!open) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape" && !isLoading) onCloseRef.current();
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, isLoading]);
+  useEscape(() => { if (!isLoading) onClose(); }, open);
 
   if (!open) return null;
 
