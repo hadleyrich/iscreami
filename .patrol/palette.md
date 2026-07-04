@@ -26,3 +26,6 @@
 
 ## 2026-07-03
 - DaisyUI data-tip tooltips invisible to screen readers — added sr-only span to Tooltip component and aria-hidden to InfoIcon HelpCircle icon — opened PR #64
+
+## 2026-07-04
+- ProfileFormModal, IngredientFormModal, ProfilesView delete confirm, IngredientsView delete confirm — added Escape key dismissal and ARIA dialog attributes — opened PR #73
