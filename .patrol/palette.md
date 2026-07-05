@@ -29,3 +29,6 @@
 
 ## 2026-07-04
 - ProfileFormModal, IngredientFormModal, ProfilesView delete confirm, IngredientsView delete confirm — added Escape key dismissal and ARIA dialog attributes — opened PR #73
+
+## 2026-07-05
+- App header missing skip-to-content link (WCAG 2.4.1) — added visually-hidden skip link as first focusable element with #main-content target via tabIndex container; added aria-label to both desktop and mobile nav elements — opened PR #77
