@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, Calendar, Download, Target, Trash2, Utensils, Weight } from "lucide-react";
 import { deleteRecipe, exportRecipe } from "../api";
 import { useToast } from "../hooks/useToast";
+import { useEscape } from "../hooks/useEscape";
 import type { Recipe } from "../types";
 
 interface RecipeCardProps {
@@ -15,15 +16,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   const { addToast } = useToast();
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
-  // Dismiss with Escape key
-  useEffect(() => {
-    if (!deleteConfirmOpen) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setDeleteConfirmOpen(false);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [deleteConfirmOpen]);
+  useEscape(() => setDeleteConfirmOpen(false), deleteConfirmOpen);
 
   async function handleExport() {
     try {

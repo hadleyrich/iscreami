@@ -12,6 +12,7 @@ import { MetricCards } from "./MetricCards";
 import { NutritionTable } from "./NutritionTable";
 import { RecipeHeader } from "./RecipeHeader";
 import { InfoIcon } from "./InfoIcon";
+import { useEscape } from "../hooks/useEscape";
 import { TOOLTIPS } from "../lib/tooltips";
 
 export function CalculatorView() {
@@ -51,25 +52,8 @@ export function CalculatorView() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [newRecipeName, setNewRecipeName] = useState("");
 
-  // Dismiss save dialog with Escape key
-  useEffect(() => {
-    if (!saveDialogOpen) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setSaveDialogOpen(false);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [saveDialogOpen]);
-
-  // Dismiss delete confirmation with Escape key
-  useEffect(() => {
-    if (!deleteConfirmOpen) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setDeleteConfirmOpen(false);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [deleteConfirmOpen]);
+  useEscape(() => setSaveDialogOpen(false), saveDialogOpen);
+  useEscape(() => setDeleteConfirmOpen(false), deleteConfirmOpen);
 
   // Load recipe from URL params
   useEffect(() => {

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { createIngredient, updateIngredient, fetchCategories } from "../api";
 import { IngredientInputSchema, type Ingredient, type IngredientInput } from "../types";
 import { useToast } from "../hooks/useToast";
+import { useEscape } from "../hooks/useEscape";
 import { fieldErrors, type FieldErrors } from "../lib/validation";
 import { InfoIcon } from "./InfoIcon";
 import { TOOLTIPS } from "../lib/tooltips";
@@ -214,15 +215,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
     mutation.mutate(result.data);
   }
 
-  // Dismiss with Escape key
-  useEffect(() => {
-    if (!open) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  useEscape(onClose, open);
 
   return (
     <dialog className="modal modal-bottom sm:modal-middle" role="dialog" aria-modal="true" aria-label={isEdit ? "Edit ingredient" : "Add ingredient"} open={open}>

@@ -8,6 +8,7 @@ import { ProfilesView } from "./components/ProfilesView";
 import { HomePage } from "./components/HomePage";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { useTheme, type Theme } from "./hooks/useTheme";
+import { useEscape } from "./hooks/useEscape";
 import { ToastProvider } from "./hooks/ToastProvider";
 import { ArrowLeft, IceCreamCone, Menu, X } from "lucide-react";
 
@@ -35,15 +36,7 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
     setMenuOpen(false);
   }
 
-  // Dismiss mobile menu with Escape key
-  useEffect(() => {
-    if (!menuOpen) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") closeMenu();
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [menuOpen]);
+  useEscape(closeMenu, menuOpen);
 
   // Focus management: move focus to first link when menu opens,
   // return focus to hamburger button when menu closes
