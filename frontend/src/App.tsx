@@ -71,7 +71,7 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
             <IceCreamCone className="text-primary" size={24} />
             <h1 className="text-xl font-bold tracking-tight">iscreami</h1>
           </Link>
-          <nav className="hidden md:flex items-center gap-1">
+          <nav aria-label="Main navigation" className="hidden md:flex items-center gap-1">
             <NavLink
               to="/calculator"
               className={({ isActive }) => isActive ? navActive : navInactive}
@@ -116,7 +116,7 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
       {/* Mobile menu */}
       {menuOpen && (
         <div ref={mobileNavRef} className="md:hidden border-t border-base-200 mt-3 pt-3 max-w-7xl mx-auto">
-          <nav className="flex flex-col gap-1 mb-3">
+          <nav aria-label="Main navigation" className="flex flex-col gap-1 mb-3">
             <NavLink
               to="/calculator"
               className={({ isActive }) => isActive ? navActive : navInactive}
@@ -155,35 +155,43 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
   );
 }
 
+const skipLinkStyle =
+  "sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[10000] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-content focus:rounded-lg focus:shadow-lg focus:outline-none focus:text-sm focus:font-medium";
+
 function AppContent() {
   const { theme, setTheme } = useTheme();
   return (
     <div className="min-h-screen bg-base-200 text-base-content">
+      <a href="#main-content" className={skipLinkStyle}>
+        Skip to main content
+      </a>
       <Header theme={theme} setTheme={setTheme} />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/calculator" element={<CalculatorView />} />
-        <Route path="/calculator/:recipeId" element={<CalculatorView />} />
-        <Route path="/recipes" element={<RecipesView />} />
-        <Route path="/profiles" element={<ProfilesView />} />
-        <Route path="/ingredients" element={<IngredientsView />} />
-        <Route
-          path="*"
-          element={
-            <main className="max-w-7xl mx-auto px-4 py-16 text-center">
-              <p className="text-4xl font-bold mb-4">404</p>
-              <p className="text-base-content/60 mb-6">Page not found.</p>
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 btn btn-primary"
-              >
-                <ArrowLeft size={16} />
-                Back to Home
-              </Link>
-            </main>
-          }
-        />
-      </Routes>
+      <div id="main-content" tabIndex={-1} className="outline-none">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/calculator" element={<CalculatorView />} />
+          <Route path="/calculator/:recipeId" element={<CalculatorView />} />
+          <Route path="/recipes" element={<RecipesView />} />
+          <Route path="/profiles" element={<ProfilesView />} />
+          <Route path="/ingredients" element={<IngredientsView />} />
+          <Route
+            path="*"
+            element={
+              <main className="max-w-7xl mx-auto px-4 py-16 text-center">
+                <p className="text-4xl font-bold mb-4">404</p>
+                <p className="text-base-content/60 mb-6">Page not found.</p>
+                <Link
+                  to="/"
+                  className="inline-flex items-center gap-2 btn btn-primary"
+                >
+                  <ArrowLeft size={16} />
+                  Back to Home
+                </Link>
+              </main>
+            }
+          />
+        </Routes>
+      </div>
     </div>
   );
 }
