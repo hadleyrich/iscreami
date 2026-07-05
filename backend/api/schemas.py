@@ -190,7 +190,9 @@ class RecipeCreate(BaseModel):
     description: str | None = Field(default=None, max_length=2000)
     recipe_type: str | None = Field(default=None, max_length=100)
     target_profile_id: uuid.UUID | None = None
-    ingredients: list[RecipeIngredientInput] = Field(default_factory=list, max_length=_MAX_RECIPE_INGREDIENTS)
+    ingredients: list[RecipeIngredientInput] = Field(
+        default_factory=list, max_length=_MAX_RECIPE_INGREDIENTS
+    )
 
 
 class RecipeUpdate(BaseModel):

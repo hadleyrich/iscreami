@@ -29,6 +29,8 @@ from api.services.export import (
 router = APIRouter(prefix="/recipes", tags=["recipes"])
 
 _MAX_IMPORT_SIZE = 5 * 1024 * 1024  # 5 MB
+_MAX_IMPORT_RECIPES = 200
+_MAX_IMPORT_INGREDIENTS = 100  # same limit as REST API create/update
 
 
 def _load_recipe(db, recipe_id: uuid.UUID) -> Recipe:
@@ -188,6 +190,10 @@ async def import_recipes(
         recipes_data = normalize_import_data(raw_json)
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
+
+    # Cap number of recipes to prevent resource exhaustion
+    if len(recipes_data) > _MAX_IMPORT_RECIPES:
+        raise HTTPException(413, f"Too many recipes — maximum is {_MAX_IMPORT_RECIPES}")
 
     # Validate
     errors = validate_import_data(recipes_data, db)
