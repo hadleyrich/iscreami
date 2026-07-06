@@ -23,3 +23,6 @@
 
 ## 2026-06-14
 - Dead code: `ImportErrorResponse` model in `backend/api/schemas.py` — defined but never imported or referenced anywhere. Opened PR #20.
+
+## 2026-07-07
+- Dead code: unused `ingredient` and `profile` pytest fixtures in `backend/tests/conftest.py` — opened PR #85
