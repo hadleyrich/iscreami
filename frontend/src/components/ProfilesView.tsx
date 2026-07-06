@@ -14,6 +14,9 @@ function fmtRange(min: number | null | undefined, max: number | null | undefined
 }
 
 export function ProfilesView() {
+  useEffect(() => {
+    document.title = "Profiles - iscreami";
+  }, []);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProfile, setEditingProfile] = useState<TargetProfile | null>(null);
   const [deletingProfile, setDeletingProfile] = useState<TargetProfile | null>(null);

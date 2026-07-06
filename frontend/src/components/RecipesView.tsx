@@ -2,13 +2,16 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Plus, Download, Upload } from "lucide-react";
 import { fetchRecipes, exportAllRecipes, importRecipes } from "../api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileUploadModal } from "./FileUploadModal";
 import { useToast } from "../hooks/useToast";
 import { RecipeCard } from "./RecipeCard";
 
 export function RecipesView() {
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Recipes - iscreami";
+  }, []);
   const { addToast } = useToast();
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [importLoading, setImportLoading] = useState(false);

@@ -53,6 +53,9 @@ const ALL_SOURCES = Object.entries(SOURCE_LABELS).map(([value, label]) => ({
 }));
 
 export function IngredientsView() {
+  useEffect(() => {
+    document.title = "Ingredients - iscreami";
+  }, []);
   const [searchInput, setSearchInput] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [source, setSource] = useState<string | null>(null);

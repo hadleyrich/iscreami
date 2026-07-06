@@ -17,6 +17,9 @@ import { TOOLTIPS } from "../lib/tooltips";
 
 export function CalculatorView() {
   const { recipeId } = useParams();
+  useEffect(() => {
+    document.title = "Calculator - iscreami";
+  }, []);
   const {
     rows,
     result,
