@@ -81,18 +81,6 @@ def make_profile(**kwargs):
     return mock
 
 
-@pytest.fixture
-def ingredient():
-    """Return the make_ingredient factory."""
-    return make_ingredient
-
-
-@pytest.fixture
-def profile():
-    """Return the make_profile factory."""
-    return make_profile
-
-
 # --- Database Fixtures (for integration tests) ---
 
 
