@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-07-08
+- Remaining manual Escape key listeners in IngredientsView and ProfilesView replaced with shared `useEscape` hook — opened PR #90
+
 ## 2026-07-04
 - Duplicated data: `SOURCE_LABELS` and `ALL_SOURCES` both defined same key→label mapping — derived `ALL_SOURCES` from `SOURCE_LABELS` via `Object.entries()`, opened PR #72
 
