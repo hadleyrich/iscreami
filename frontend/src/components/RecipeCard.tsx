@@ -100,6 +100,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               type="button"
               className="btn btn-xs btn-ghost"
               title="Export recipe"
+              aria-label="Export recipe"
               onClick={() => void handleExport()}
             >
               <Download size={13} />
@@ -108,6 +109,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               type="button"
               className="btn btn-xs btn-ghost text-error hover:bg-error/10"
               title="Delete recipe"
+              aria-label="Delete recipe"
               onClick={() => setDeleteConfirmOpen(true)}
             >
               <Trash2 size={13} />
