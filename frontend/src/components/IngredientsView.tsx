@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { Search, Plus, Pencil, Trash2 } from "lucide-react";
@@ -6,6 +6,7 @@ import { fetchIngredients, fetchCategories, deleteIngredient } from "../api";
 import type { Ingredient } from "../types";
 import { IngredientFormModal } from "./IngredientFormModal";
 import { useToast } from "../hooks/useToast";
+import { useEscape } from "../hooks/useEscape";
 import { fmt, fmtKj } from "../lib/formatting";
 import { InfoIcon } from "./InfoIcon";
 import { TOOLTIPS } from "../lib/tooltips";
@@ -87,15 +88,7 @@ export function IngredientsView() {
     setModalOpen(true);
   }
 
-  // Dismiss delete confirm with Escape key
-  useEffect(() => {
-    if (deletingIngredient == null) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setDeletingIngredient(null);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [deletingIngredient]);
+  useEscape(() => setDeletingIngredient(null), deletingIngredient != null);
 
   const search = useDebouncedValue(searchInput, 300);
 

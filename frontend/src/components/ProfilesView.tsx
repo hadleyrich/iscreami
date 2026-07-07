@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { fetchProfiles, deleteProfile } from "../api";
 import type { TargetProfile } from "../types";
 import { ProfileFormModal } from "./ProfileFormModal";
 import { useToast } from "../hooks/useToast";
+import { useEscape } from "../hooks/useEscape";
 
 function fmtRange(min: number | null | undefined, max: number | null | undefined): string {
   if (min == null && max == null) return "—";
@@ -49,15 +50,7 @@ export function ProfilesView() {
     setModalOpen(true);
   }
 
-  // Dismiss delete confirm with Escape key
-  useEffect(() => {
-    if (deletingProfile == null) return;
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setDeletingProfile(null);
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [deletingProfile]);
+  useEscape(() => setDeletingProfile(null), deletingProfile != null);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
