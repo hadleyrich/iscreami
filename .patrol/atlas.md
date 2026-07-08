@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-07-09
+- Dead code: unused `_MAX_IMPORT_INGREDIENTS` constant in `backend/api/routes/recipes.py` — defined but never referenced. Removed.
+
 ## 2026-07-08
 - Remaining manual Escape key listeners in IngredientsView and ProfilesView replaced with shared `useEscape` hook — opened PR #90
 
