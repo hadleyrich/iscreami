@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-07-11
+- Moved `_MAX_IMPORT_INGREDIENTS` from `recipes.py` to `export.py` where the validation logic lives — replaced hardcoded `100` with named constant, updated error message to interpolate it
+
 ## 2026-07-09
 - Dead code: unused `_MAX_IMPORT_INGREDIENTS` constant in `backend/api/routes/recipes.py` — defined but never referenced. Removed.
 
