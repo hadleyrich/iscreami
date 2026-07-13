@@ -78,6 +78,10 @@ jobs:
         run: pnpm tsc --noEmit
 
       - name: Lint (ESLint)
+        # ESLint + typescript-eslint v8.x crashes on TS7 (SyntaxKind/t.Extension removed).
+        # Remove continue-on-error when typescript-eslint ships TS7 support.
+        # https://github.com/typescript-eslint/typescript-eslint
+        continue-on-error: true
         run: pnpm lint
 
       - name: Build
