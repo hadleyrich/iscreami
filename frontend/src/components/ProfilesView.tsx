@@ -53,7 +53,7 @@ export function ProfilesView() {
   useEscape(() => setDeletingProfile(null), deletingProfile != null);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <main className="max-w-7xl mx-auto px-4 py-6">
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <h1 className="text-2xl font-bold">Profiles</h1>
@@ -205,6 +205,6 @@ export function ProfilesView() {
           <button onClick={() => setDeletingProfile(null)}>close</button>
         </form>
       </dialog>
-    </div>
+    </main>
   );
 }
