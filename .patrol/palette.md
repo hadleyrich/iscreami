@@ -38,3 +38,6 @@
 
 ## 2026-07-08
 - FileUploadModal X close button missing aria-label — all other icon-only buttons had it, but this one was missed — opened PR #93
+
+## 2026-07-13
+- IngredientsView and ProfilesView missing `<main>` landmark — both used `<div>` while other pages used `<main>`, breaking landmark navigation for screen readers (WCAG 1.3.1) — opened PR #99
