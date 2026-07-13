@@ -1,7 +1,8 @@
 # Atlas — Code Quality Findings
 
 ## 2026-07-14
-- Dead `_MAX_IMPORT_INGREDIENTS` constant in `routes/recipes.py` and unused `fetchIngredient` export in `api.ts` — opened PR #100
+- `_MAX_IMPORT_INGREDIENTS` in `routes/recipes.py` was dead but needed reinstating (per PR #95 feedback) — redefined as alias to `_MAX_RECIPE_INGREDIENTS` from `schemas.py`; `export.py` now uses the shared constant instead of hardcoded 100
+- Unused `fetchIngredient` export in `api.ts` removed — genuinely dead, no consumers
 
 ## 2026-07-08
 - Remaining manual Escape key listeners in IngredientsView and ProfilesView replaced with shared `useEscape` hook — opened PR #90
