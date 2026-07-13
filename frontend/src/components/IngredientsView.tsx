@@ -114,7 +114,7 @@ export function IngredientsView() {
   const end = data ? Math.min(page * PAGE_SIZE, data.total) : 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <main className="max-w-7xl mx-auto px-4 py-6">
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -422,6 +422,6 @@ export function IngredientsView() {
           <button onClick={() => setDeletingIngredient(null)}>close</button>
         </form>
       </dialog>
-    </div>
+    </main>
   );
 }
