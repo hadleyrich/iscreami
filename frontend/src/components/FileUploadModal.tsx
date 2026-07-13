@@ -118,6 +118,7 @@ export function FileUploadModal({
             onClick={onClose}
             className="btn btn-ghost btn-sm btn-circle"
             disabled={isLoading}
+            aria-label="Close"
           >
             <X className="w-4 h-4" />
           </button>
