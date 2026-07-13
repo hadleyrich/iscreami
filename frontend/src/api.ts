@@ -64,10 +64,6 @@ export function fetchIngredients(
     return request(path, signal ? { signal } : undefined);
 }
 
-export function fetchIngredient(id: string): Promise<Ingredient> {
-    return request(`/ingredients/${id}`);
-}
-
 export function createIngredient(data: IngredientInput): Promise<Ingredient> {
     return request("/ingredients", { method: "POST", body: JSON.stringify(data) });
 }
