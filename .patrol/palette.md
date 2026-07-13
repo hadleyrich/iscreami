@@ -35,3 +35,6 @@
 
 ## 2026-07-07
 - RecipeCard icon-only export and delete buttons missing aria-label — added aria-label matching existing codebase pattern — opened PR #87
+
+## 2026-07-08
+- FileUploadModal X close button missing aria-label — all other icon-only buttons had it, but this one was missed — opened PR #93
