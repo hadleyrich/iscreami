@@ -37,5 +37,8 @@
 ## 2026-06-14
 - Dead code: `ImportErrorResponse` model in `backend/api/schemas.py` — defined but never imported or referenced anywhere. Opened PR #20.
 
+## 2026-07-15
+- Dead code: `_MAX_IMPORT_INGREDIENTS` constant in `backend/api/services/export.py` — defined but never referenced (validation uses `MAX_RECIPE_INGREDIENTS` from schemas). Opened PR #105.
+
 ## 2026-07-07
 - Dead code: unused `ingredient` and `profile` pytest fixtures in `backend/tests/conftest.py` — opened PR #85
