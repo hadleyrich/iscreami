@@ -44,3 +44,7 @@
 
 ## 2026-07-13
 - IngredientsView and ProfilesView missing `<main>` landmark — both used `<div>` while other pages used `<main>`, breaking landmark navigation for screen readers (WCAG 1.3.1) — opened PR #99
+
+## 2026-07-14
+- Added `<meta name="description">` and `<meta name="theme-color">` to index.html for mobile browser chrome matching and link previews — opened PR #101
+- Fixed ProfileFormModal heading always showing "Create a new target profile" even when editing — opened PR #101
