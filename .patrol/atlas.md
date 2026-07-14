@@ -1,7 +1,7 @@
 # Atlas — Code Quality Findings
 
 ## 2026-07-14
-- `_MAX_IMPORT_INGREDIENTS` in `routes/recipes.py` was dead but needed reinstating (per PR #95 feedback) — redefined as alias to `_MAX_RECIPE_INGREDIENTS` from `schemas.py`; `export.py` now uses the shared constant instead of hardcoded 100
+- Renamed `_MAX_RECIPE_INGREDIENTS` (private naming) → `MAX_RECIPE_INGREDIENTS` (public) — used across `schemas.py`, `export.py`, and `routes/recipes.py`. Removed the unnecessary `_MAX_IMPORT_INGREDIENTS` alias from `routes/recipes.py` (was dead code even as an alias). `export.py` now imports `MAX_RECIPE_INGREDIENTS` from `schemas` instead of hardcoding 100.
 - Unused `fetchIngredient` export in `api.ts` removed — genuinely dead, no consumers
 
 ## 2026-07-08
