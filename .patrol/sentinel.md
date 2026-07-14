@@ -32,3 +32,6 @@
 
 ## 2026-07-10
 - Skipped — already 2+ open PRs from me on this repo (#83 CORS, #88 HSTS)
+
+## 2026-07-14
+- Skipped — still 2 open PRs from me (#83 CORS wildcard credential leak, #88 HSTS). Nothing new to patrol.
