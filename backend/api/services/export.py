@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import select
 
 from api.models import Ingredient, Recipe, RecipeIngredient, TargetProfile
-from api.schemas import RecipeExportMetrics, RecipeExportOut
+from api.schemas import MAX_RECIPE_INGREDIENTS, RecipeExportMetrics, RecipeExportOut
 from api.services.calculator import (
     calculate_composition,
     calculate_freezing,
@@ -18,6 +18,8 @@ from api.services.calculator import (
 
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
+
+_MAX_IMPORT_INGREDIENTS = 100  # maximum ingredients per recipe
 
 
 def build_export_single(
@@ -97,8 +99,8 @@ def _validate_recipe(recipe_data: dict, idx: int, db_session: Session) -> list[s
         return errors
 
     # Cap ingredients per recipe to prevent resource exhaustion
-    if len(ingredients) > 100:
-        errors.append(f"{recipe_prefix}: too many ingredients (maximum 100)")
+    if len(ingredients) > MAX_RECIPE_INGREDIENTS:
+        errors.append(f"{recipe_prefix}: too many ingredients (maximum {MAX_RECIPE_INGREDIENTS})")
         return errors
 
     for ing_idx, ing in enumerate(ingredients):

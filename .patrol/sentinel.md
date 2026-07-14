@@ -29,3 +29,6 @@
 
 ## 2026-06-12
 - Added security headers middleware (CSP, XFO, XCTO, Referrer-Policy) to FastAPI app — opened PR #13
+
+## 2026-07-10
+- Skipped — already 2+ open PRs from me on this repo (#83 CORS, #88 HSTS)

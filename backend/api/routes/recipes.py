@@ -30,7 +30,6 @@ router = APIRouter(prefix="/recipes", tags=["recipes"])
 
 _MAX_IMPORT_SIZE = 5 * 1024 * 1024  # 5 MB
 _MAX_IMPORT_RECIPES = 200
-_MAX_IMPORT_INGREDIENTS = 100  # same limit as REST API create/update
 
 
 def _load_recipe(db, recipe_id: uuid.UUID) -> Recipe:
