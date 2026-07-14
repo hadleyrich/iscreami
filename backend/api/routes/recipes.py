@@ -13,7 +13,6 @@ from sqlalchemy.orm import joinedload, selectinload
 from api.db import NOT_FOUND_RESPONSE, DbSession
 from api.models import Recipe, RecipeIngredient
 from api.schemas import (
-    _MAX_RECIPE_INGREDIENTS,
     PaginatedRecipes,
     RecipeCreate,
     RecipeExportOut,
@@ -26,8 +25,6 @@ from api.services.export import (
     normalize_import_data,
     validate_import_data,
 )
-
-_MAX_IMPORT_INGREDIENTS = _MAX_RECIPE_INGREDIENTS  # same limit as REST API create/update
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
 
