@@ -19,6 +19,8 @@ from api.services.calculator import (
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
+_MAX_IMPORT_INGREDIENTS = 100  # maximum ingredients per recipe
+
 
 def build_export_single(
     recipe: Recipe,

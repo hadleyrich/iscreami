@@ -4,6 +4,12 @@
 - Renamed `_MAX_RECIPE_INGREDIENTS` (private naming) → `MAX_RECIPE_INGREDIENTS` (public) — used across `schemas.py`, `export.py`, and `routes/recipes.py`. Removed the unnecessary `_MAX_IMPORT_INGREDIENTS` alias from `routes/recipes.py` (was dead code even as an alias). `export.py` now imports `MAX_RECIPE_INGREDIENTS` from `schemas` instead of hardcoding 100.
 - Unused `fetchIngredient` export in `api.ts` removed — genuinely dead, no consumers
 
+## 2026-07-11
+- Moved `_MAX_IMPORT_INGREDIENTS` from `recipes.py` to `export.py` where the validation logic lives — replaced hardcoded `100` with named constant, updated error message to interpolate it
+
+## 2026-07-09
+- Dead code: unused `_MAX_IMPORT_INGREDIENTS` constant in `backend/api/routes/recipes.py` — defined but never referenced. Removed.
+
 ## 2026-07-08
 - Remaining manual Escape key listeners in IngredientsView and ProfilesView replaced with shared `useEscape` hook — opened PR #90
 
