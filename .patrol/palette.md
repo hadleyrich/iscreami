@@ -33,6 +33,9 @@
 ## 2026-07-05
 - App header missing skip-to-content link (WCAG 2.4.1) — added visually-hidden skip link as first focusable element with #main-content target via tabIndex container; added aria-label to both desktop and mobile nav elements — opened PR #77
 
+## 2026-07-06
+- All pages missing document.title (WCAG 2.4.2) — added useEffect to set meaningful page titles on Calculator, Ingredients, Recipes, Profiles, 404, and Home — opened PR #82
+
 ## 2026-07-07
 - RecipeCard icon-only export and delete buttons missing aria-label — added aria-label matching existing codebase pattern — opened PR #87
 

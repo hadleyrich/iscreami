@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { Search, Plus, Pencil, Trash2 } from "lucide-react";
@@ -54,6 +54,9 @@ const ALL_SOURCES = Object.entries(SOURCE_LABELS).map(([value, label]) => ({
 }));
 
 export function IngredientsView() {
+  useEffect(() => {
+    document.title = "Ingredients - iscreami";
+  }, []);
   const [searchInput, setSearchInput] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [source, setSource] = useState<string | null>(null);

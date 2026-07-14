@@ -1,8 +1,12 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { IceCreamCone, FlaskConical, BookOpen } from "lucide-react";
 import { RecentRecipes } from "./RecentRecipes";
 
 export function HomePage() {
+  useEffect(() => {
+    document.title = "iscreami";
+  }, []);
   return (
     <main className="max-w-3xl mx-auto px-4 py-16 text-center">
       <IceCreamCone className="mx-auto text-primary mb-6" size={64} />

@@ -169,23 +169,31 @@ function AppContent() {
           <Route path="/ingredients" element={<IngredientsView />} />
           <Route
             path="*"
-            element={
-              <main className="max-w-7xl mx-auto px-4 py-16 text-center">
-                <p className="text-4xl font-bold mb-4">404</p>
-                <p className="text-base-content/60 mb-6">Page not found.</p>
-                <Link
-                  to="/"
-                  className="inline-flex items-center gap-2 btn btn-primary"
-                >
-                  <ArrowLeft size={16} />
-                  Back to Home
-                </Link>
-              </main>
-            }
+            element={<NotFoundPage />}
           />
         </Routes>
       </div>
     </div>
+  );
+}
+
+function NotFoundPage() {
+  useEffect(() => {
+    document.title = "Page Not Found - iscreami";
+  }, []);
+
+  return (
+    <main className="max-w-7xl mx-auto px-4 py-16 text-center">
+      <p className="text-4xl font-bold mb-4">404</p>
+      <p className="text-base-content/60 mb-6">Page not found.</p>
+      <Link
+        to="/"
+        className="inline-flex items-center gap-2 btn btn-primary"
+      >
+        <ArrowLeft size={16} />
+        Back to Home
+      </Link>
+    </main>
   );
 }
 
