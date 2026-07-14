@@ -256,7 +256,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
         <div className="flex items-center justify-between px-6 py-4 border-b border-base-200 shrink-0">
           <div>
             <h3 className="font-bold text-lg">
-              Create a new target profile
+              {isEdit ? "Edit Profile" : "Create a new target profile"}
             </h3>
             <p className="text-xs text-base-content/60 mt-1">
               Define a set of target values for your recipes.
