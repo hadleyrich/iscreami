@@ -25,7 +25,7 @@ export function IngredientSearch({ onSelect }: IngredientSearchProps) {
     return () => clearTimeout(t);
   }, [query]);
 
-  const { data } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["ingredient-search", debouncedQuery],
     queryFn: ({ signal }) =>
       fetchIngredients({ q: debouncedQuery, limit: 15 }, signal),
@@ -33,10 +33,14 @@ export function IngredientSearch({ onSelect }: IngredientSearchProps) {
   });
 
   const results = useMemo(() => data?.items ?? [], [data]);
+  const hasQuery = query.trim().length > 0;
+  const searchAttempted = hasQuery && debouncedQuery.length > 0;
+  const noResults = searchAttempted && !isFetching && results.length === 0;
+  const showLoading = searchAttempted && isFetching && results.length === 0;
 
-  // Derive open state — no separate boolean state needed
+  // Derive open state — include no-results and loading for feedback
   const dropdownOpen =
-    !dismissed && results.length > 0 && query.trim().length > 0;
+    !dismissed && hasQuery && (results.length > 0 || noResults || showLoading);
 
   // Scroll the highlighted item into view
   useEffect(() => {
@@ -119,6 +123,17 @@ export function IngredientSearch({ onSelect }: IngredientSearchProps) {
           className="absolute z-50 w-full mt-1 bg-base-100 border border-base-200
                      rounded-lg shadow-lg max-h-64 overflow-y-auto overflow-x-hidden p-1"
         >
+          {showLoading && (
+            <li className="flex items-center gap-2 px-3 py-4 text-sm text-base-content/50" aria-live="polite">
+              <span className="loading loading-spinner loading-xs" />
+              Searching…
+            </li>
+          )}
+          {noResults && (
+            <li className="px-3 py-4 text-sm text-base-content/50" aria-live="polite">
+              No ingredients found for "<span className="font-medium text-base-content/70">{query}</span>"
+            </li>
+          )}
           {results.map((ing, i) => (
             <li key={ing.id}>
               <button
