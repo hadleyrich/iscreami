@@ -48,3 +48,6 @@
 ## 2026-07-14
 - Added `<meta name="description">` and `<meta name="theme-color">` to index.html for mobile browser chrome matching and link previews — opened PR #101
 - Fixed ProfileFormModal heading always showing "Create a new target profile" even when editing — opened PR #101
+
+## 2026-07-15
+- IngredientSearch dropdown showed no feedback when search returned zero results — added "No ingredients found" and "Searching..." states — opened PR #TBD
