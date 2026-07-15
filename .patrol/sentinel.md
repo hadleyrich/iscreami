@@ -35,3 +35,6 @@
 
 ## 2026-07-14
 - Skipped — still 2 open PRs from me (#83 CORS wildcard credential leak, #88 HSTS). Nothing new to patrol.
+
+## 2026-07-15
+- Skipped — still 2 open PRs from me (#83, #88). No change in PR status.
