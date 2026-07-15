@@ -50,4 +50,4 @@
 - Fixed ProfileFormModal heading always showing "Create a new target profile" even when editing — opened PR #101
 
 ## 2026-07-15
-- IngredientSearch dropdown showed no feedback when search returned zero results — added "No ingredients found" and "Searching..." states — opened PR #TBD
+- IngredientSearch dropdown showed no feedback when search returned zero results — added "No ingredients found" and "Searching..." states — opened PR #107
