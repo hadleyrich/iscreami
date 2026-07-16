@@ -28,7 +28,7 @@ const ROWS: { label: string; key: keyof CompositionResult; tooltip?: string }[] 
 export function CompositionTable({ composition, sweetness }: CompositionTableProps) {
   return (
     <div className="space-y-5">
-      <table className="w-full text-sm">
+      <table className="w-full text-sm" aria-label="Composition">
         <thead>
           <tr className="border-b border-base-200">
             <th className="text-left py-1 font-medium text-base-content/60">Metric</th>
@@ -68,7 +68,7 @@ export function CompositionTable({ composition, sweetness }: CompositionTablePro
               Where the recipe's sweetness is coming from, by ingredient.
             </p>
           </div>
-          <table className="w-full text-sm">
+          <table className="w-full text-sm" aria-label="Sweetener sources">
             <thead>
               <tr className="border-b border-base-200">
                 <th className="text-left py-1 font-medium text-base-content/60">Source</th>

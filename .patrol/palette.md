@@ -51,3 +51,6 @@
 
 ## 2026-07-15
 - IngredientSearch dropdown showed no feedback when search returned zero results — added "No ingredients found" and "Searching..." states — opened PR #107
+
+## 2026-07-16
+- Data tables (Ingredients, Profiles, Composition, Nutrition) missing aria-label — screen readers announce them as generic "table" without context (WCAG 1.3.1) — added descriptive aria-label to all data tables
