@@ -37,6 +37,9 @@
 ## 2026-06-14
 - Dead code: `ImportErrorResponse` model in `backend/api/schemas.py` — defined but never imported or referenced anywhere. Opened PR #20.
 
+## 2026-07-17
+- Dead config: `serving_size_g` field in `Settings` class — defined but never imported/referenced anywhere. Removed. Opened PR #110.
+
 ## 2026-07-15
 - Dead code: `_MAX_IMPORT_INGREDIENTS` constant in `backend/api/services/export.py` — defined but never referenced (validation uses `MAX_RECIPE_INGREDIENTS` from schemas). Opened PR #105.
 
