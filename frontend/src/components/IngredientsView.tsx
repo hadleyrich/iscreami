@@ -188,7 +188,7 @@ export function IngredientsView() {
       {/* Table */}
       <div className="bg-base-100 rounded-xl shadow-sm border border-base-200 overflow-hidden">
         <div className="overflow-x-auto md:overflow-visible">
-          <table className="table table-sm w-full">
+          <table className="table table-sm w-full" aria-label="Ingredients">
             <thead>
               <tr className="border-b border-base-200 bg-base-200">
                 <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">

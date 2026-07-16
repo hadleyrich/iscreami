@@ -72,7 +72,7 @@ export function NutritionTable({ nutrition }: NutritionTableProps) {
       </div>
 
       <div className="rounded-lg border border-base-200 bg-base-100 px-3 py-3">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm" aria-label="Nutrition per 100g and per serving">
           <thead>
             <tr className="border-b border-base-200">
               <th className="text-left py-1 font-medium text-base-content/60">Nutrient</th>
