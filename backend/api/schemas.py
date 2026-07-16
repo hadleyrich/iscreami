@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validat
 from api.services.composition import ingredient_total_solids_pct
 from api.services.pac import ingredient_pac
 from api.services.sweetness import ingredient_pod
+from api.settings import settings
 
 # --- Enums ---
 
@@ -241,7 +242,7 @@ class CalculateRequest(BaseModel):
     ingredients: list[CalculateIngredientInput] = Field(
         min_length=1, max_length=MAX_RECIPE_INGREDIENTS
     )
-    serving_size_g: float = Field(default=66.0, gt=0)
+    serving_size_g: float = Field(default=settings.serving_size_g, gt=0)
 
 
 class CompositionResult(BaseModel):

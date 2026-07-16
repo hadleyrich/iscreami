@@ -19,6 +19,7 @@ from api.services.calculator import (
     calculate_sweetness,
     compare_to_target,
 )
+from api.settings import settings
 from tests.conftest import make_ingredient, make_profile
 
 
@@ -192,8 +193,8 @@ class TestCalculateNutrition:
 
         ing = make_ingredient(energy_kj_per_100g=200.0)
         result = calculate_nutrition([(ing, 100.0)])  # type: ignore[arg-type]
-        assert result.serving_size_g == pytest.approx(66.0)
-        assert result.per_serving["energy_kj"] == pytest.approx(132.0)
+        assert result.serving_size_g == pytest.approx(settings.serving_size_g)
+        assert result.per_serving["energy_kj"] == pytest.approx(200.0 * settings.serving_size_g / 100.0)
 
 
 class TestCompareToTarget:

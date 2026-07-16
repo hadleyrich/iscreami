@@ -28,6 +28,7 @@ from api.services.freezing import (
 )
 from api.services.pac import recipe_pac
 from api.services.sweetness import recipe_pod
+from api.settings import settings
 
 if TYPE_CHECKING:
     from api.models import Ingredient, TargetProfile
@@ -168,7 +169,7 @@ def calculate_sweetness(
 
 def calculate_nutrition(
     items: list[tuple[Ingredient, float]],
-    serving_size_g: float = 66.0,
+    serving_size_g: float = settings.serving_size_g,
 ) -> NutritionResult:
     total_weight = sum(w for _, w in items)
 
@@ -291,7 +292,7 @@ def _f(val: float | None) -> float | None:
 def calculate(
     items: list[tuple[Ingredient, float]],
     target_profile: TargetProfile | None = None,
-    serving_size_g: float = 66.0,
+    serving_size_g: float = settings.serving_size_g,
 ) -> CalculateResponse:
     """Run the full calculation pipeline."""
     composition = calculate_composition(items)

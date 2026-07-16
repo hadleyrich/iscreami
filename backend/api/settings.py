@@ -17,6 +17,10 @@ class Settings(BaseSettings):
         default="*",
         description="Comma-separated list of allowed CORS origins",
     )
+    serving_size_g: float = Field(
+        default=66.0,
+        description="Default serving size in grams",
+    )
 
 
 settings = Settings()
