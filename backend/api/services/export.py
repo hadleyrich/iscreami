@@ -19,6 +19,7 @@ from api.services.calculator import (
 if TYPE_CHECKING:
     from sqlalchemy.orm import Session
 
+
 def build_export_single(
     recipe: Recipe,
 ) -> RecipeExportOut:
@@ -97,7 +98,9 @@ def _validate_recipe(recipe_data: dict, idx: int, db_session: Session) -> list[s
 
     # Cap ingredients per recipe to prevent resource exhaustion
     if len(ingredients) > MAX_RECIPE_INGREDIENTS:
-        errors.append(f"{recipe_prefix}: too many ingredients (maximum {MAX_RECIPE_INGREDIENTS})")
+        errors.append(
+            f"{recipe_prefix}: too many ingredients (maximum {MAX_RECIPE_INGREDIENTS})"
+        )
         return errors
 
     for ing_idx, ing in enumerate(ingredients):

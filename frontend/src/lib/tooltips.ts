@@ -66,4 +66,3 @@ export const TOOLTIPS = {
     clearRecipe: "Clear all ingredients and start over",
 };
 
-export type TooltipKey = keyof typeof TOOLTIPS;

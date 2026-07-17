@@ -194,7 +194,9 @@ class TestCalculateNutrition:
         ing = make_ingredient(energy_kj_per_100g=200.0)
         result = calculate_nutrition([(ing, 100.0)])  # type: ignore[arg-type]
         assert result.serving_size_g == pytest.approx(settings.serving_size_g)
-        assert result.per_serving["energy_kj"] == pytest.approx(200.0 * settings.serving_size_g / 100.0)
+        assert result.per_serving["energy_kj"] == pytest.approx(
+            200.0 * settings.serving_size_g / 100.0
+        )
 
 
 class TestCompareToTarget:
