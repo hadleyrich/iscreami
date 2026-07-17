@@ -66,7 +66,7 @@ export function ToastProvider({ children }: Readonly<{ children: React.ReactNode
     <ToastContext.Provider value={useMemo(() => ({ addToast }), [addToast])}>
       {children}
       {createPortal(
-        <div className="toast toast-top toast-end z-9999">
+        <div className="toast toast-top toast-end z-[9999]">
           {toasts.map((t) => (
             <div
               key={t.id}
