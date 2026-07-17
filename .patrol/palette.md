@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-07-17
+- Toast container used invalid Tailwind `z-9999` class (needs `z-[9999]`) — toasts could render behind modal backdrops, hiding error/success feedback — opened PR #111
+
 ## 2026-06-10
 - FileUploadModal missing backdrop click and Escape key dismissal — added backdrop onClick + document-level Escape handler + proper ARIA dialog attributes
 
