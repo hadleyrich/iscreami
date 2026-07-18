@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import uuid
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 from api.models import Ingredient, IngredientAlias, IngredientCategory
-from api.schemas import IngredientCreate
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
+
+    from api.schemas import IngredientCreate
 
 
 class BaseImporter(ABC):
