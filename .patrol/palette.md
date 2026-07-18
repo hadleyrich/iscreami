@@ -57,3 +57,6 @@
 
 ## 2026-07-16
 - Data tables (Ingredients, Profiles, Composition, Nutrition) missing aria-label — screen readers announce them as generic "table" without context (WCAG 1.3.1) — added descriptive aria-label to all data tables
+
+## 2026-07-18
+- RecipeHeader Save/Update button used hardcoded disabled color overrides instead of DaisyUI semantic tokens — only button in the codebase doing this, inconsistent with rest of app — opened PR #115
