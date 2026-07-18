@@ -41,3 +41,6 @@
 
 ## 2026-07-17
 - Skipped — still 2 open PRs from me (#83 CORS, #88 HSTS). No change in PR status.
+
+## 2026-07-18
+- Skipped — still 2 open PRs from me (#83 CORS, #88 HSTS). Both still open.
