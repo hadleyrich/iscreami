@@ -45,3 +45,6 @@
 
 ## 2026-07-07
 - Dead code: unused `ingredient` and `profile` pytest fixtures in `backend/tests/conftest.py` — opened PR #85
+
+## 2026-07-18
+- Dead export: `TooltipKey` in `frontend/src/lib/tooltips.ts` — defined but never imported. Opened PR #114.
