@@ -57,3 +57,6 @@
 
 ## 2026-07-16
 - Data tables (Ingredients, Profiles, Composition, Nutrition) missing aria-label — screen readers announce them as generic "table" without context (WCAG 1.3.1) — added descriptive aria-label to all data tables
+
+## 2026-07-19
+- Export All and individual export buttons missing loading state — no spinner or disabled state during export, leaving users with no click feedback — opened PR #118
