@@ -15,10 +15,12 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   const queryClient = useQueryClient();
   const { addToast } = useToast();
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   useEscape(() => setDeleteConfirmOpen(false), deleteConfirmOpen);
 
   async function handleExport() {
+    setExporting(true);
     try {
       const data = await exportRecipe(recipe.id);
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -33,6 +35,8 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
       addToast("Recipe exported", "success");
     } catch (err) {
       addToast(err instanceof Error ? err.message : "Failed to export recipe", "error");
+    } finally {
+      setExporting(false);
     }
   }
 
@@ -102,8 +106,13 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               title="Export recipe"
               aria-label="Export recipe"
               onClick={() => void handleExport()}
+              disabled={exporting}
             >
-              <Download size={13} />
+              {exporting ? (
+                <span className="loading loading-spinner loading-xs" />
+              ) : (
+                <Download size={13} />
+              )}
             </button>
             <button
               type="button"
