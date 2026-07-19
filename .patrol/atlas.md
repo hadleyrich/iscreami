@@ -37,6 +37,8 @@
 ## 2026-06-14
 - Dead code: `ImportErrorResponse` model in `backend/api/schemas.py` — defined but never imported or referenced anywhere. Opened PR #20.
 
+## 2026-07-19
+- Moved type-only imports (Callable, starlette types, Session, Iterator, Path) behind TYPE_CHECKING blocks in app.py, base.py, usda.py — opened PR #116
 ## 2026-07-17
 - Wired up `serving_size_g` setting: was defined in Settings but never consumed — now imported by schemas.py and calculator.py to replace hardcoded 66.0 defaults. Opened PR #110.
 

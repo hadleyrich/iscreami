@@ -10,9 +10,11 @@ is processed without loading everything into memory at once.
 
 from __future__ import annotations
 
-from collections.abc import Iterator
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+    from pathlib import Path
 
 import ijson  # type: ignore[import-untyped]
 import typer
