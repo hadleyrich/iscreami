@@ -25,7 +25,7 @@ export function ProfilesView() {
   const qc = useQueryClient();
   const { addToast } = useToast();
 
-  const { data: profiles, isLoading } = useQuery({
+  const { data: profiles, isLoading, isError, error } = useQuery({
     queryKey: ["profiles"],
     queryFn: fetchProfiles,
   });
@@ -106,14 +106,24 @@ export function ProfilesView() {
                   </td>
                 </tr>
               )}
-              {!isLoading && profiles?.length === 0 && (
+              {isError && (
+                <tr>
+                  <td colSpan={6} className="text-center py-10">
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-base-content/60">Could not load profiles</p>
+                      <p className="text-xs text-base-content/40">{error?.message ?? "An unexpected error occurred"}</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+              {!isLoading && !isError && profiles?.length === 0 && (
                 <tr>
                   <td colSpan={6} className="text-center py-10 text-base-content/40">
                     No profiles found. Add one to get started.
                   </td>
                 </tr>
               )}
-              {profiles?.map((profile) => (
+              {!isLoading && !isError && profiles?.map((profile) => (
                 <tr
                   key={profile.id}
                   className="border-b border-base-200 hover:bg-base-200/40 transition-colors"
@@ -158,7 +168,7 @@ export function ProfilesView() {
         </div>
       </div>
 
-      {profiles && (
+      {profiles && !isError && (
         <p className="text-xs text-base-content/40 mt-2">
           {profiles.length.toLocaleString()} profile{profiles.length === 1 ? "" : "s"} total
         </p>
