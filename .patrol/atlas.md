@@ -48,5 +48,7 @@
 ## 2026-07-07
 - Dead code: unused `ingredient` and `profile` pytest fixtures in `backend/tests/conftest.py` — opened PR #85
 
+## 2026-07-21
+- Unreliable `f == 0.0` float equality in `test_freezing.py:151,156` — replaced with `pytest.approx(0.0)`. Opened PR #122
 ## 2026-07-18
 - Dead export: `TooltipKey` in `frontend/src/lib/tooltips.ts` — defined but never imported. Opened PR #114.
