@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from contextlib import asynccontextmanager
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from starlette.types import Receive, Scope, Send
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from starlette.types import Receive, Scope, Send
 
 from api.routes import calculate, ingredients, profiles, recipes
 from api.settings import settings

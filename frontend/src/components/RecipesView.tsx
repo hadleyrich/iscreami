@@ -15,6 +15,7 @@ export function RecipesView() {
   const { addToast } = useToast();
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [importLoading, setImportLoading] = useState(false);
+  const [exportAllLoading, setExportAllLoading] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(0);
 
@@ -26,6 +27,7 @@ export function RecipesView() {
   const recipes = recipesData?.items ?? [];
 
   async function handleExportAll() {
+    setExportAllLoading(true);
     try {
       const data = await exportAllRecipes();
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -40,6 +42,8 @@ export function RecipesView() {
       addToast(`Exported ${data.length} recipes`, "success");
     } catch (err) {
       addToast(err instanceof Error ? err.message : "Failed to export recipes", "error");
+    } finally {
+      setExportAllLoading(false);
     }
   }
 
@@ -96,8 +100,13 @@ export function RecipesView() {
               type="button"
               className="btn btn-outline btn-sm gap-1"
               onClick={() => void handleExportAll()}
+              disabled={exportAllLoading}
             >
-              <Download size={15} />
+              {exportAllLoading ? (
+                <span className="loading loading-spinner loading-xs" />
+              ) : (
+                <Download size={15} />
+              )}
               Export All
             </button>
           )}

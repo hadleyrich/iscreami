@@ -60,3 +60,6 @@
 
 ## 2026-07-18
 - RecipeHeader Save/Update button used hardcoded disabled color overrides instead of DaisyUI semantic tokens — only button in the codebase doing this, inconsistent with rest of app — opened PR #115
+
+## 2026-07-19
+- Export All and individual export buttons missing loading state — no spinner or disabled state during export, leaving users with no click feedback — opened PR #118
