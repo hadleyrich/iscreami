@@ -19,7 +19,7 @@ export function RecipesView() {
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(0);
 
-  const { data: recipesData, isLoading, refetch } = useQuery({
+  const { data: recipesData, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["recipes"],
     queryFn: fetchRecipes,
   });
@@ -119,7 +119,21 @@ export function RecipesView() {
         </div>
       )}
 
-      {!isLoading && recipes.length === 0 && (
+      {isError && (
+        <div className="bg-base-100 rounded-xl border border-error/30 p-12 text-center">
+          <p className="text-base-content/60 mb-2">Could not load recipes</p>
+          <p className="text-sm text-base-content/40 mb-4">{error?.message ?? "An unexpected error occurred"}</p>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={() => refetch()}
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {!isLoading && !isError && recipes.length === 0 && (
         <div className="bg-base-100 rounded-xl border border-base-200 p-12 text-center">
           <p className="text-base-content/60 mb-4">No recipes yet</p>
           <button
@@ -133,7 +147,7 @@ export function RecipesView() {
         </div>
       )}
 
-      {!isLoading && recipes.length > 0 && (
+      {!isLoading && !isError && recipes.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {recipes.map((recipe) => (
             <RecipeCard key={recipe.id} recipe={recipe} />

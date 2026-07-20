@@ -100,7 +100,7 @@ export function IngredientsView() {
     queryFn: fetchCategories,
   });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["ingredients", search, categoryId, source, page],
     queryFn: () =>
       fetchIngredients({
@@ -250,7 +250,20 @@ export function IngredientsView() {
                   </td>
                 </tr>
               )}
-              {!isLoading && data?.items.length === 0 && (
+              {isError && (
+                <tr>
+                  <td
+                    colSpan={11}
+                    className="text-center py-10"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="text-base-content/60">Could not load ingredients</p>
+                      <p className="text-xs text-base-content/40">{error?.message ?? "An unexpected error occurred"}</p>
+                    </div>
+                  </td>
+                </tr>
+              )}
+              {!isLoading && !isError && data?.items.length === 0 && (
                 <tr>
                   <td
                     colSpan={11}
@@ -260,7 +273,7 @@ export function IngredientsView() {
                   </td>
                 </tr>
               )}
-              {data?.items.map((ing) => (
+              {!isLoading && !isError && data?.items.map((ing) => (
                 <tr
                   key={ing.id}
                   className="border-b border-base-200 hover:bg-base-200/40 transition-colors"
@@ -346,7 +359,7 @@ export function IngredientsView() {
         </div>
 
         {/* Pagination */}
-        {data && data.total > PAGE_SIZE && (
+        {data && !isError && data.total > PAGE_SIZE && (
           <div className="flex items-center justify-between px-4 py-3 border-t border-base-200">
             <span className="text-sm text-base-content/60">
               {start}–{end} of {data.total}
@@ -373,7 +386,7 @@ export function IngredientsView() {
         )}
       </div>
 
-      {data && (
+      {data && !isError && (
         <p className="text-xs text-base-content/40 mt-2">
           {data.total.toLocaleString()} ingredient{data.total === 1 ? "" : "s"}{" "}
           total
