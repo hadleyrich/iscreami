@@ -273,7 +273,7 @@ export function RecipeHeader({
             <Tooltip content={TOOLTIPS.saveRecipe}>
               <button
                 type="button"
-                className="btn btn-sm btn-primary gap-1 disabled:bg-pink-100 disabled:border-pink-100 disabled:text-pink-300 dark:disabled:bg-pink-900/30 dark:disabled:border-pink-900/30 dark:disabled:text-pink-700"
+                className="btn btn-sm btn-primary gap-1"
                 onClick={onSaveRecipe}
                 disabled={isSaving || (!recipeName && !hasIngredients) || (!!recipeName && !hasUnsavedChanges)}
               >
