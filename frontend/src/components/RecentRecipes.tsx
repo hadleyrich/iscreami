@@ -4,7 +4,7 @@ import { fetchRecipes } from "../api";
 import { RecipeCard } from "./RecipeCard";
 
 export function RecentRecipes() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["recipes"],
     queryFn: fetchRecipes,
   });
@@ -19,10 +19,18 @@ export function RecentRecipes() {
     );
   }
 
-  if (error || !data) {
+  if (isError || error || !data) {
     return (
-      <div className="text-center py-8 text-base-content/40">
-        <p>Could not load recipes</p>
+      <div className="text-center py-8">
+        <p className="text-base-content/40">Could not load recipes</p>
+        <p className="text-xs text-base-content/30 mt-1">{error?.message ?? "An unexpected error occurred"}</p>
+        <button
+          type="button"
+          className="btn btn-primary btn-sm mt-3"
+          onClick={() => refetch()}
+        >
+          Retry
+        </button>
       </div>
     );
   }
