@@ -186,16 +186,7 @@ def calculate_nutrition(
 
     per_100g: dict[str, float] = {}
     for label, attr in nutrient_fields.items():
-        total = 0.0
-        for ingredient, weight_g in items:
-            val = getattr(ingredient, attr, None)
-            if val is not None:
-                total += float(val) * weight_g / 100.0
-        # Normalize to per 100g of mix
-        if total_weight > 0:
-            per_100g[label] = round(total / total_weight * 100.0, 2)
-        else:
-            per_100g[label] = 0.0
+        per_100g[label] = round(_weighted_pct(items, attr, total_weight), 2)
 
     # Per serving
     per_serving: dict[str, float] = {}
