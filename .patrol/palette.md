@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-07-21
+- RecentRecipes (HomePage) error state missing Retry button — added Retry button consistent with RecipesView pattern — opened PR #123
+
 ## 2026-07-17
 - Toast container used invalid Tailwind `z-9999` class (needs `z-[9999]`) — toasts could render behind modal backdrops, hiding error/success feedback — opened PR #111
 
