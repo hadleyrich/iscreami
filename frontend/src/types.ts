@@ -72,7 +72,7 @@ export const IngredientInputSchema = z.object({
                 return val.split(",").map((s) => s.trim()).filter(Boolean);
             return [];
         },
-        z.array(z.string()),
+        z.array(z.string().max(200, "Alias must be at most 200 characters")).max(50, "At most 50 aliases allowed"),
     ),
 });
 export type IngredientInput = z.infer<typeof IngredientInputSchema>;
