@@ -47,3 +47,6 @@
 
 ## 2026-07-19
 - Skipped — still 2 open PRs from me (#83 CORS, #88 HSTS). No change in PR status.
+
+## 2026-07-21
+- Added alias length constraints (max 200 chars per alias, max 50 aliases) to ingredient Pydantic and Zod schemas — opened PR #124
