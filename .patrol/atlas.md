@@ -39,6 +39,7 @@
 
 ## 2026-07-19
 - Moved type-only imports (Callable, starlette types, Session, Iterator, Path) behind TYPE_CHECKING blocks in app.py, base.py, usda.py — opened PR #116
+
 ## 2026-07-17
 - Wired up `serving_size_g` setting: was defined in Settings but never consumed — now imported by schemas.py and calculator.py to replace hardcoded 66.0 defaults. Opened PR #110.
 
@@ -52,3 +53,6 @@
 - Unreliable `f == 0.0` float equality in `test_freezing.py:151,156` — replaced with `pytest.approx(0.0)`. Opened PR #122
 ## 2026-07-18
 - Dead export: `TooltipKey` in `frontend/src/lib/tooltips.ts` — defined but never imported. Opened PR #114.
+
+## 2026-07-22
+- Eliminated duplicated weighted-pct calculation loop in `calculator.py:calculate_nutrition` — inline loop replaced with shared `_weighted_pct` helper. Fixed misleading `</div>` indent in `RecipeHeader.tsx`. Opened PR #125.

@@ -79,7 +79,17 @@ class IngredientBase(BaseModel):
     pac_override: float | None = None
     pod_override: float | None = None
 
-    aliases: list[str] = []
+    aliases: list[str] = Field(default_factory=list, max_length=50)
+
+    @field_validator("aliases")
+    @classmethod
+    def check_alias_lengths(cls, v: list[str]) -> list[str]:
+        for i, alias in enumerate(v):
+            if len(alias) > 200:
+                raise ValueError(
+                    f"Alias at index {i} exceeds maximum length of 200 characters"
+                )
+        return v
 
 
 class IngredientCreate(IngredientBase):
