@@ -298,6 +298,6 @@ export function RecipeHeader({
         </div>
       </div>
     </div>
-            </div>
+    </div>
   );
 }
