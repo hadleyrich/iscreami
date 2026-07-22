@@ -56,3 +56,6 @@
 
 ## 2026-07-22
 - Eliminated duplicated weighted-pct calculation loop in `calculator.py:calculate_nutrition` — inline loop replaced with shared `_weighted_pct` helper. Fixed misleading `</div>` indent in `RecipeHeader.tsx`. Opened PR #125.
+
+## 2026-07-23
+- Skipped — no code quality issues worth fixing today (tsc clean, ruff passes, 136 tests pass, no dead exports or imports)
