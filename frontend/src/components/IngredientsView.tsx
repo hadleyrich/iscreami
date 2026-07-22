@@ -100,7 +100,7 @@ export function IngredientsView() {
     queryFn: fetchCategories,
   });
 
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["ingredients", search, categoryId, source, page],
     queryFn: () =>
       fetchIngredients({
@@ -259,6 +259,13 @@ export function IngredientsView() {
                     <div className="flex flex-col items-center gap-2">
                       <p className="text-base-content/60">Could not load ingredients</p>
                       <p className="text-xs text-base-content/40">{error?.message ?? "An unexpected error occurred"}</p>
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-xs mt-2"
+                        onClick={() => refetch()}
+                      >
+                        Retry
+                      </button>
                     </div>
                   </td>
                 </tr>

@@ -25,7 +25,7 @@ export function ProfilesView() {
   const qc = useQueryClient();
   const { addToast } = useToast();
 
-  const { data: profiles, isLoading, isError, error } = useQuery({
+  const { data: profiles, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["profiles"],
     queryFn: fetchProfiles,
   });
@@ -112,6 +112,13 @@ export function ProfilesView() {
                     <div className="flex flex-col items-center gap-2">
                       <p className="text-base-content/60">Could not load profiles</p>
                       <p className="text-xs text-base-content/40">{error?.message ?? "An unexpected error occurred"}</p>
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-xs mt-2"
+                        onClick={() => refetch()}
+                      >
+                        Retry
+                      </button>
                     </div>
                   </td>
                 </tr>
