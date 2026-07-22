@@ -148,12 +148,12 @@ class TestFreezingCurve:
     def test_zero_pac_all_zeros(self):
 
         curve = freezing_curve(0.0, min_temp=-10.0, step=1.0)
-        assert all(f == 0.0 for _, f in curve)
+        assert all(f == pytest.approx(0.0) for _, f in curve)
 
     def test_none_pac_all_zeros(self):
 
         curve = freezing_curve(None, min_temp=-10.0, step=1.0)
-        assert all(f == 0.0 for _, f in curve)
+        assert all(f == pytest.approx(0.0) for _, f in curve)
 
 
 class TestFPDAtFrozenPct:
