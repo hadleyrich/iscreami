@@ -1,5 +1,8 @@
 # Sentinel — Security Patrol Log
 
+## 2026-07-22
+- Added `Cross-Origin-Resource-Policy: same-origin` header to security middleware — opened PR #127
+
 ## 2026-07-03
 - Added `Permissions-Policy` header to security middleware, disabling unused
   browser APIs (geolocation, camera, mic, payment, USB, serial, bluetooth, etc.)
