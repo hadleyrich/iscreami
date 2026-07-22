@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-07-22
+- IngredientsView and ProfilesView error states missing Retry button — added Retry button consistent with RecipesView pattern — opened PR #126
+
 ## 2026-07-21
 - RecentRecipes (HomePage) error state missing Retry button — added Retry button consistent with RecipesView pattern — opened PR #123
 
