@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-07-23
+- ProfilesView empty state missing call-to-action button — added "Create your first profile" button consistent with RecipesView pattern — opened PR #130
+
 ## 2026-07-22
 - IngredientsView and ProfilesView error states missing Retry button — added Retry button consistent with RecipesView pattern — opened PR #126
 
