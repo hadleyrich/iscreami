@@ -228,7 +228,7 @@ class RecipeOut(BaseModel):
     updated_at: datetime
     ingredients: list[RecipeIngredientOut] = []
 
-    @computed_field  # type: ignore
+    @computed_field  # type: ignore[misc]
     @property
     def total_weight_grams(self) -> float:
         return sum(ingredient.weight_grams for ingredient in self.ingredients)
