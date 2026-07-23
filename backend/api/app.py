@@ -83,9 +83,8 @@ app.add_middleware(
 # Security headers — defence in depth for all responses (API + SPA)
 # SHA-256 hash of the inline anti-FOUC script in frontend/index.html.
 # If that script changes, regenerate the hash with:
-#   sed -n '/<script>/{:a;n;/</script>/b;H;ba};x;s/\\n//g' frontend/index.html \
-#     | openssl dgst -sha256 -binary | base64
-_INLINE_THEME_HASH = "sha256-Qs7CjKlg3pe+cAaS/pVGsJaqX+REVCim7a2AbB8z2WA="
+#   python3 -c "import hashlib,base64,re; html=open('frontend/index.html').read(); m=re.search(r'<script>(.*?)</script>',html,re.DOTALL); print('sha256-'+base64.b64encode(hashlib.sha256(m.group(1).strip().encode()).digest()).decode())"
+_INLINE_THEME_HASH = "sha256-Snx3WBEVK8A/l9vmyBleK31mdJswUXR2ZAqyBkMt2CA="
 
 CSP = (
     "default-src 'self'; "
