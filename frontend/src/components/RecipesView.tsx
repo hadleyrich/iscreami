@@ -89,7 +89,7 @@ export function RecipesView() {
           </button>
           <button
             type="button"
-            className="btn btn-outline btn-sm gap-1"
+            className={`btn btn-outline btn-sm gap-1${recipes.length === 0 ? " col-span-2" : ""}`}
             onClick={() => setImportModalOpen(true)}
           >
             <Upload size={15} />

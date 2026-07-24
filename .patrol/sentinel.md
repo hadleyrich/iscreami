@@ -56,3 +56,6 @@
 
 ## 2026-07-21
 - Added alias length constraints (max 200 chars per alias, max 50 aliases) to ingredient Pydantic and Zod schemas — opened PR #124
+
+## 2026-07-24
+- Added `--no-server-header` to suppress uvicorn Server header (version info leak) — opened PR #137
