@@ -7,8 +7,6 @@ export const TOOLTIPS = {
     // === Calculator Page ===
     profile:
         "Choose a style target (e.g. gelato, sorbet, soft serve) to see how your recipe compares to typical ranges for that style. Leave blank to calculate without targets.",
-    recipeSearch: "Find and load previously saved recipes",
-    ingredientSearch: "Search and add ingredients to your recipe",
 
     // === Metrics & Composition ===
     totalSolids:
@@ -33,36 +31,18 @@ export const TOOLTIPS = {
     pac: "Anti-Freezing Power (PAC from the Italian 'Potere AntiCongelante'). A score that totals up how much all the dissolved ingredients lower the freezing point. Higher PAC = softer ice cream at a given temperature.",
     pacMix:
         "PAC calculated per 100g of total mix. This is the headline number for comparing recipes — higher means the mix resists freezing more strongly and will be softer at a given temperature.",
-    pacWater:
-        "PAC calculated per 100g of the water in the mix (excluding fat and dry solids). This more precisely predicts how low the actual freezing point will be, since only dissolved ingredients in the water affect freezing.",
     freezingPoint:
         "The temperature at which your mix just starts to freeze. Below this point, water begins turning to ice crystals. The freezing curve below shows how much water is frozen at each temperature as it continues to drop.",
     servingTemp:
         "The calculated temperature at which 75% of your mix's water is frozen — the industry benchmark for scoopable consistency. In a typical dipping cabinet (around −12°C), a more negative value here means softer ice cream; less negative means harder and icier.",
-    sugarContent:
-        "Total sugar content as a percentage of the mix. Affects flavour, how hard the ice cream freezes, and overall texture.",
-
     // === Ingredients ===
-    ingredientWater: "The base liquid for your ice cream. Usually milk, cream, or both.",
-    ingredientMilkProduct:
-        "Dairy ingredients that contribute milk fat and milk solids. Examples: whole milk, cream, butter, skim milk powder.",
-    ingredientSweetener:
-        "Adds sweetness and lowers the freezing point. Can be sugar, honey, corn syrup, glucose syrup, or sugar alcohols like erythritol.",
     ingredientPacOverride:
         "Manually set the PAC value for this ingredient instead of using the calculated one. Useful when you have lab data or a manufacturer spec that differs from the default.",
     ingredientPodOverride:
         "Manually set the sweetness score (POD) for this ingredient instead of using the calculated one. Useful for novel sweeteners or when matching a known sensory result.",
 
-    // === Nutritional Info ===
-    navNutrition:
-        "View detailed nutritional breakdown of your recipe per 100g serving.",
-    navComposition:
-        "View all composition metrics and their values for your current recipe.",
-
     // === Recipe Management ===
     saveRecipe: "Save your current recipe for future use",
-    loadRecipe: "Load a previously saved recipe",
     deleteRecipe: "Delete the currently open recipe",
-    clearRecipe: "Clear all ingredients and start over",
 };
 
