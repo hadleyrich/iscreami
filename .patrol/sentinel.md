@@ -1,5 +1,8 @@
 # Sentinel — Security Patrol Log
 
+## 2026-07-23
+- Fixed stale CSP `script-src` hash for inline anti-FOUC theme script — opened PR #131
+
 ## 2026-07-22
 - Added `Cross-Origin-Resource-Policy: same-origin` header to security middleware — opened PR #127
 
@@ -53,3 +56,6 @@
 
 ## 2026-07-21
 - Added alias length constraints (max 200 chars per alias, max 50 aliases) to ingredient Pydantic and Zod schemas — opened PR #124
+
+## 2026-07-24
+- Added `--no-server-header` to suppress uvicorn Server header (version info leak) — opened PR #137

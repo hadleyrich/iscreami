@@ -74,106 +74,113 @@ export function ProfilesView() {
         </button>
       </div>
 
-      {/* Table */}
-      <div className="bg-base-100 rounded-xl shadow-sm border border-base-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="table table-sm w-full" aria-label="Target profiles">
-            <thead>
-              <tr className="border-b border-base-200 bg-base-200">
-                <th className="text-left px-4 py-3 font-medium text-base-content/60">
-                  Name
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
-                  Total solids (%)
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
-                  Total fat (%)
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
-                  Serving temp (°C)
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
-                  Sweetness (POD)
-                </th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading && (
-                <tr>
-                  <td colSpan={6} className="text-center py-10 text-base-content/40 animate-pulse">
-                    Loading…
-                  </td>
-                </tr>
-              )}
-              {isError && (
-                <tr>
-                  <td colSpan={6} className="text-center py-10">
-                    <div className="flex flex-col items-center gap-2">
-                      <p className="text-base-content/60">Could not load profiles</p>
-                      <p className="text-xs text-base-content/40">{error?.message ?? "An unexpected error occurred"}</p>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-xs mt-2"
-                        onClick={() => refetch()}
-                      >
-                        Retry
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )}
-              {!isLoading && !isError && profiles?.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="text-center py-10 text-base-content/40">
-                    No profiles found. Add one to get started.
-                  </td>
-                </tr>
-              )}
-              {!isLoading && !isError && profiles?.map((profile) => (
-                <tr
-                  key={profile.id}
-                  className="border-b border-base-200 hover:bg-base-200/40 transition-colors"
-                >
-                  <td className="px-4 py-2.5 font-medium whitespace-nowrap">{profile.name}</td>
-                  <td className="px-4 py-2.5 text-sm tabular-nums">
-                    {fmtRange(profile.total_solids_min, profile.total_solids_max)}
-                  </td>
-                  <td className="px-4 py-2.5 text-sm tabular-nums">
-                    {fmtRange(profile.total_fat_min, profile.total_fat_max)}
-                  </td>
-                  <td className="px-4 py-2.5 text-sm tabular-nums">
-                    {fmtRange(profile.serving_temp_min, profile.serving_temp_max)}
-                  </td>
-                  <td className="px-4 py-2.5 text-sm tabular-nums">
-                    {fmtRange(profile.sweetness_min, profile.sweetness_max)}
-                  </td>
-                  <td className="px-4 py-2.5">
-                    <div className="flex justify-end gap-1">
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-xs btn-circle"
-                        aria-label="Edit"
-                        onClick={() => openEdit(profile)}
-                      >
-                        <Pencil size={13} />
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-xs btn-circle text-error"
-                        aria-label="Delete"
-                        onClick={() => setDeletingProfile(profile)}
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Table or empty state */}
+      {profiles && profiles.length === 0 && !isLoading && !isError ? (
+        <div className="bg-base-100 rounded-xl border border-base-200 p-12 text-center">
+          <p className="text-base-content/60 mb-4">No profiles yet. Add one to get started.</p>
+          <button
+            type="button"
+            className="btn btn-primary gap-2"
+            onClick={openAdd}
+          >
+            <Plus size={18} />
+            Create your first profile
+          </button>
         </div>
-      </div>
+      ) : (
+        <div className="bg-base-100 rounded-xl shadow-sm border border-base-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="table table-sm w-full" aria-label="Target profiles">
+              <thead>
+                <tr className="border-b border-base-200 bg-base-200">
+                  <th className="text-left px-4 py-3 font-medium text-base-content/60">
+                    Name
+                  </th>
+                  <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
+                    Total solids (%)
+                  </th>
+                  <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
+                    Total fat (%)
+                  </th>
+                  <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
+                    Serving temp (°C)
+                  </th>
+                  <th className="text-left px-4 py-3 font-medium text-base-content/60 whitespace-nowrap">
+                    Sweetness (POD)
+                  </th>
+                  <th className="px-4 py-3" />
+                </tr>
+              </thead>
+              <tbody>
+                {isLoading && (
+                  <tr>
+                    <td colSpan={6} className="text-center py-10 text-base-content/40 animate-pulse">
+                      Loading…
+                    </td>
+                  </tr>
+                )}
+                {isError && (
+                  <tr>
+                    <td colSpan={6} className="text-center py-10">
+                      <div className="flex flex-col items-center gap-2">
+                        <p className="text-base-content/60">Could not load profiles</p>
+                        <p className="text-xs text-base-content/40">{error?.message ?? "An unexpected error occurred"}</p>
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-xs mt-2"
+                          onClick={() => refetch()}
+                        >
+                          Retry
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                {!isLoading && !isError && profiles?.map((profile) => (
+                  <tr
+                    key={profile.id}
+                    className="border-b border-base-200 hover:bg-base-200/40 transition-colors"
+                  >
+                    <td className="px-4 py-2.5 font-medium whitespace-nowrap">{profile.name}</td>
+                    <td className="px-4 py-2.5 text-sm tabular-nums">
+                      {fmtRange(profile.total_solids_min, profile.total_solids_max)}
+                    </td>
+                    <td className="px-4 py-2.5 text-sm tabular-nums">
+                      {fmtRange(profile.total_fat_min, profile.total_fat_max)}
+                    </td>
+                    <td className="px-4 py-2.5 text-sm tabular-nums">
+                      {fmtRange(profile.serving_temp_min, profile.serving_temp_max)}
+                    </td>
+                    <td className="px-4 py-2.5 text-sm tabular-nums">
+                      {fmtRange(profile.sweetness_min, profile.sweetness_max)}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex justify-end gap-1">
+                        <button
+                          type="button"
+                          className="btn btn-ghost btn-xs btn-circle"
+                          aria-label="Edit"
+                          onClick={() => openEdit(profile)}
+                        >
+                          <Pencil size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-ghost btn-xs btn-circle text-error"
+                          aria-label="Delete"
+                          onClick={() => setDeletingProfile(profile)}
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {profiles && !isError && (
         <p className="text-xs text-base-content/40 mt-2">

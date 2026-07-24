@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-07-25
+- Dead code: 11 unused `TOOLTIPS` keys removed from `frontend/src/lib/tooltips.ts` — opened PR #139
+
 ## 2026-07-14
 - Renamed `_MAX_RECIPE_INGREDIENTS` (private naming) → `MAX_RECIPE_INGREDIENTS` (public) — used across `schemas.py`, `export.py`, and `routes/recipes.py`. Removed the unnecessary `_MAX_IMPORT_INGREDIENTS` alias from `routes/recipes.py` (was dead code even as an alias). `export.py` now imports `MAX_RECIPE_INGREDIENTS` from `schemas` instead of hardcoding 100.
 - Unused `fetchIngredient` export in `api.ts` removed — genuinely dead, no consumers
@@ -59,3 +62,6 @@
 
 ## 2026-07-23
 - Skipped — no code quality issues worth fixing today (tsc clean, ruff passes, 136 tests pass, no dead exports or imports)
+
+## 2026-07-24
+- Narrowed bare `# type: ignore` to `# type: ignore[misc]` in `schemas.py:231`; inlined redundant `export_data` return in `recipes.py:105-106` — opened PR #133
