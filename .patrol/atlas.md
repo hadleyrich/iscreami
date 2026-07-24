@@ -62,3 +62,6 @@
 
 ## 2026-07-23
 - Skipped — no code quality issues worth fixing today (tsc clean, ruff passes, 136 tests pass, no dead exports or imports)
+
+## 2026-07-24
+- Narrowed bare `# type: ignore` to `# type: ignore[misc]` in `schemas.py:231`; inlined redundant `export_data` return in `recipes.py:105-106` — opened PR #133

@@ -102,8 +102,7 @@ def export_all_recipes(db: DbSession):
 def export_single_recipe(recipe_id: uuid.UUID, db: DbSession):
     """Export a single recipe as a plain JSON object with underscore keys."""
     recipe = _load_recipe(db, recipe_id)
-    export_data = build_export_single(recipe)
-    return export_data
+    return build_export_single(recipe)
 
 
 @router.get("/{recipe_id}", response_model=RecipeOut, responses=NOT_FOUND_RESPONSE)
