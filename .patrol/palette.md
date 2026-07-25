@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-07-25
+- Calculator: ingredient search silently ignored duplicate adds — added toast feedback via rowsRef pattern — opened PR #140
+
 ## 2026-07-24
 - RecipesView action buttons grid left empty cell on mobile when Export All was hidden (no recipes) — Import button now spans full width — opened PR #136
 
