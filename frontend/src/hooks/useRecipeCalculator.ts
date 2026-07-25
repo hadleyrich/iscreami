@@ -19,6 +19,10 @@ export function useRecipeCalculator() {
     const [isSaving, setIsSaving] = useState(false);
     const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
     const lastErrorAtRef = useRef<number>(0);
+    const rowsRef = useRef<RecipeRow[]>(rows);
+    useEffect(() => {
+        rowsRef.current = rows;
+    }, [rows]);
     const { addToast } = useToast();
     const qc = useQueryClient();
 
@@ -58,8 +62,11 @@ export function useRecipeCalculator() {
 
     const addIngredient = useCallback(
         (ingredient: Ingredient, weight_grams = 100) => {
+            if (rowsRef.current.some((r) => r.ingredient.id === ingredient.id)) {
+                addToast(`"${ingredient.name}" is already in the recipe`, "info");
+                return;
+            }
             setRows((prev) => {
-                if (prev.some((r) => r.ingredient.id === ingredient.id)) return prev;
                 const next = [
                     ...prev,
                     { ingredient, weight_grams, sort_order: prev.length },
@@ -68,7 +75,7 @@ export function useRecipeCalculator() {
                 return next;
             });
         },
-        [profile, triggerCalculate]
+        [profile, triggerCalculate, addToast]
     );
 
     const updateWeight = useCallback(
