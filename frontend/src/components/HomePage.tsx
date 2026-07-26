@@ -24,7 +24,7 @@ export function HomePage() {
           className="group flex items-start gap-4 bg-base-100 rounded-xl border border-base-200 p-5 shadow-sm hover:border-primary/50 transition-colors"
         >
           <FlaskConical
-            className="text-pink-400 mt-0.5 shrink-0 group-hover:scale-110 transition-transform"
+            className="text-primary mt-0.5 shrink-0 group-hover:scale-110 transition-transform"
             size={28}
           />
           <div>
