@@ -79,5 +79,8 @@
 ## 2026-07-19
 - Export All and individual export buttons missing loading state — no spinner or disabled state during export, leaving users with no click feedback — opened PR #118
 
+## 2026-07-26
+- HomePage Calculator card icon used hardcoded `text-pink-400` instead of `text-primary` — inconsistent with Ingredients card next to it — opened PR #144
+
 ## 2026-07-20
 - Recipes, Ingredients, and Profiles list pages showed misleading empty states on API fetch failure — added distinct error states with error message and Retry button on RecipesView — opened PR #119
