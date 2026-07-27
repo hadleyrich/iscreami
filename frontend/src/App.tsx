@@ -184,8 +184,8 @@ function NotFoundPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-16 text-center">
-      <p className="text-4xl font-bold mb-4">404</p>
-      <p className="text-base-content/60 mb-6">Page not found.</p>
+      <p className="text-4xl font-bold mb-4" aria-hidden="true">404</p>
+      <h1 className="text-base-content/60 mb-6 text-xl font-normal">Page not found.</h1>
       <Link
         to="/"
         className="inline-flex items-center gap-2 btn btn-primary"

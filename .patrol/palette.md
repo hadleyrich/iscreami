@@ -79,6 +79,9 @@
 ## 2026-07-19
 - Export All and individual export buttons missing loading state — no spinner or disabled state during export, leaving users with no click feedback — opened PR #118
 
+## 2026-07-27
+- 404 page missing proper heading hierarchy (WCAG 1.3.1) — promoted "Page not found" to &lt;h1&gt;, marked decorative "404" as aria-hidden — opened PR #148
+
 ## 2026-07-26
 - HomePage Calculator card icon used hardcoded `text-pink-400` instead of `text-primary` — inconsistent with Ingredients card next to it — opened PR #144
 
