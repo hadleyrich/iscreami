@@ -148,12 +148,6 @@ export const TargetProfileInputSchema = z.object({
 });
 export type TargetProfileInput = z.infer<typeof TargetProfileInputSchema>;
 
-export interface RecipeIngredientInput {
-    ingredient_id: string;
-    weight_grams: number;
-    sort_order: number;
-}
-
 export const RecipeIngredientOutSchema = z.object({
     id: z.number(),
     ingredient_id: z.string(),

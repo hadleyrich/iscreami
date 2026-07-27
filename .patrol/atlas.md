@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-07-28
+- Dead export: unused `RecipeIngredientInput` interface in `frontend/src/types.ts` — opened PR #150
+
 ## 2026-07-25
 - Dead code: 11 unused `TOOLTIPS` keys removed from `frontend/src/lib/tooltips.ts` — opened PR #139
 
