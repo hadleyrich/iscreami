@@ -79,6 +79,9 @@
 ## 2026-07-19
 - Export All and individual export buttons missing loading state — no spinner or disabled state during export, leaving users with no click feedback — opened PR #118
 
+## 2026-07-28
+- FileUploadModal: button-in-label double-trigger pattern + inert drag-zone click — replaced label+button with standalone button, added onClick to drag zone — opened PR #151
+
 ## 2026-07-27
 - 404 page missing proper heading hierarchy (WCAG 1.3.1) — promoted "Page not found" to &lt;h1&gt;, marked decorative "404" as aria-hidden — opened PR #148
 
