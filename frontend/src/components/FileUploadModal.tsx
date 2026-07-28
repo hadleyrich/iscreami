@@ -150,6 +150,7 @@ export function FileUploadModal({
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onKeyDown={handleDragZoneKeyDown}
+                onClick={() => document.getElementById("file-input")?.click()}
                 disabled={isLoading}
                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer w-full ${
                   isDragActive
@@ -182,18 +183,14 @@ export function FileUploadModal({
                   className="hidden"
                   disabled={isLoading}
                 />
-                <label
-                  htmlFor="file-input"
-                  className="flex-1"
+                <button
+                  type="button"
+                  className="btn btn-outline btn-sm w-full"
+                  disabled={isLoading}
+                  onClick={() => document.getElementById("file-input")?.click()}
                 >
-                  <button
-                    className="btn btn-outline btn-sm w-full"
-                    disabled={isLoading}
-                    onClick={() => document.getElementById("file-input")?.click()}
-                  >
-                    Choose File
-                  </button>
-                </label>
+                  Choose File
+                </button>
               </div>
 
               {/* Selected File */}
