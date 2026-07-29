@@ -79,6 +79,9 @@
 ## 2026-07-19
 - Export All and individual export buttons missing loading state — no spinner or disabled state during export, leaving users with no click feedback — opened PR #118
 
+## 2026-07-29
+- ErrorBoundary missing proper heading hierarchy (used <p> instead of <h1>) and only offered Reload (no way to navigate away) — added <h1> and Back to Home link — opened PR #153
+
 ## 2026-07-28
 - FileUploadModal: button-in-label double-trigger pattern + inert drag-zone click — replaced label+button with standalone button, added onClick to drag zone — opened PR #151
 

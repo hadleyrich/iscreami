@@ -214,12 +214,25 @@ class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <main className="min-h-screen bg-base-200 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-2xl font-bold mb-2">Something went wrong</p>
+          <div className="text-center max-w-md px-4">
+            <h1 className="text-2xl font-bold mb-2 text-base-content">Something went wrong</h1>
             <p className="text-base-content/60 mb-6">An unexpected error occurred.</p>
-            <button className="btn btn-primary" onClick={() => globalThis.location.reload()}>
-              Reload
-            </button>
+            <div className="flex items-center justify-center gap-3">
+              <Link
+                to="/"
+                className="btn btn-outline gap-2"
+              >
+                <ArrowLeft size={16} />
+                Back to Home
+              </Link>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => globalThis.location.reload()}
+              >
+                Reload
+              </button>
+            </div>
           </div>
         </main>
       );
