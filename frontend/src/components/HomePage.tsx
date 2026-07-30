@@ -10,9 +10,9 @@ export function HomePage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-16 text-center">
       <IceCreamCone className="mx-auto text-primary mb-6" size={64} />
-      <h2 className="text-3xl font-bold tracking-tight mb-3">
+      <h1 className="text-3xl font-bold tracking-tight mb-3">
         Welcome to iscreami
-      </h2>
+      </h1>
       <p className="text-base-content/60 text-lg mb-12">
         Open-source ice cream recipe calculator. Build recipes, analyse
         composition, and optimise sweetness &amp; freezing point.
@@ -28,9 +28,9 @@ export function HomePage() {
             size={28}
           />
           <div>
-            <h3 className="font-semibold text-base-content mb-1">
+            <h2 className="font-semibold text-base-content mb-1">
               Calculator
-            </h3>
+            </h2>
             <p className="text-sm text-base-content/60">
               Build a recipe, adjust ingredient weights, and see real-time PAC,
               sweetness, and composition results.
@@ -47,9 +47,9 @@ export function HomePage() {
             size={28}
           />
           <div>
-            <h3 className="font-semibold text-base-content mb-1">
+            <h2 className="font-semibold text-base-content mb-1">
               Ingredients
-            </h3>
+            </h2>
             <p className="text-sm text-base-content/60">
               Browse and search the ingredient database, including nutritional
               data from USDA and NZ FOODfiles.
@@ -59,7 +59,7 @@ export function HomePage() {
       </div>
 
       <div className="mt-16 text-left">
-        <h3 className="text-lg font-semibold mb-4">Recent Recipes</h3>
+        <h2 className="text-lg font-semibold mb-4">Recent Recipes</h2>
         <RecentRecipes />
       </div>
     </main>

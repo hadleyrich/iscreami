@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-07-30
+- HomePage heading hierarchy inconsistent with other pages — promoted <h2> page title to <h1> and card/section headings from <h3> to <h2> for proper h1→h2 hierarchy — opened PR #154
+
 ## 2026-07-25
 - Calculator: ingredient search silently ignored duplicate adds — added toast feedback via rowsRef pattern — opened PR #140
 
