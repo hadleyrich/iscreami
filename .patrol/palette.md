@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-07-31
+- Header brand rendered as `<h1>` on every page alongside the page-title `<h1>` (duplicate top-level heading, WCAG 1.3.1) — demoted brand to `<span>`, each page now has a single h1 — opened PR #155
+
 ## 2026-07-30
 - HomePage heading hierarchy inconsistent with other pages — promoted <h2> page title to <h1> and card/section headings from <h3> to <h2> for proper h1→h2 hierarchy — opened PR #154
 
