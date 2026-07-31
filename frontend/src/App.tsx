@@ -62,7 +62,7 @@ function Header({ theme, setTheme }: Readonly<{ theme: Theme; setTheme: (t: Them
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity" onClick={closeMenu}>
             <IceCreamCone className="text-primary" size={24} />
-            <h1 className="text-xl font-bold tracking-tight">iscreami</h1>
+            <span className="text-xl font-bold tracking-tight">iscreami</span>
           </Link>
           <nav aria-label="Main navigation" className="hidden md:flex items-center gap-1">
             <NavLink
