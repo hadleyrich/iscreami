@@ -155,8 +155,6 @@ export const RecipeIngredientOutSchema = z.object({
     sort_order: z.number(),
     ingredient: IngredientSchema,
 });
-export type RecipeIngredientOut = z.infer<typeof RecipeIngredientOutSchema>;
-
 export const RecipeSchema = z.object({
     id: z.string(),
     name: z.string(),
