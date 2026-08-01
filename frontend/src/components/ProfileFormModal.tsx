@@ -111,6 +111,7 @@ function TargetCard({
   minError,
   maxError,
 }: Readonly<TargetCardProps>) {
+  const errorId = `${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-error`;
   return (
     <div className="border border-base-200 rounded-lg p-4 bg-base-50 hover:bg-base-100 transition-colors space-y-3">
       <div className="flex items-center justify-between">
@@ -133,6 +134,8 @@ function TargetCard({
               type="number"
               step="any"
               aria-label={`${label} min`}
+              aria-invalid={minError ? true : undefined}
+              aria-describedby={minError ? errorId : undefined}
               placeholder="0"
               className={`input input-sm input-bordered w-full${minError ? " input-error" : ""}`}
               value={minValue}
@@ -152,6 +155,8 @@ function TargetCard({
               type="number"
               step="any"
               aria-label={`${label} max`}
+              aria-invalid={maxError ? true : undefined}
+              aria-describedby={maxError ? errorId : undefined}
               placeholder="0"
               className={`input input-sm input-bordered w-full${maxError ? " input-error" : ""}`}
               value={maxValue}
@@ -163,7 +168,7 @@ function TargetCard({
       </div>
 
       {(minError || maxError) && (
-        <p className="label-text-alt text-error text-xs">{minError ?? maxError}</p>
+        <p id={errorId} className="label-text-alt text-error text-xs">{minError ?? maxError}</p>
       )}
     </div>
   );
@@ -241,6 +246,15 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
     const result = TargetProfileInputSchema.safeParse(form);
     if (!result.success) {
       setErrors(fieldErrors(result.error));
+      // Move focus to the first invalid field so keyboard and screen reader
+      // users land on the error instead of hunting through the form.
+      // rAF lets React paint the aria-invalid attributes before we query.
+      requestAnimationFrame(() => {
+        const firstInvalid = document.querySelector<HTMLElement>(
+          "#profile-form [aria-invalid='true']"
+        );
+        firstInvalid?.focus();
+      });
       return;
     }
     setErrors({});
@@ -288,6 +302,8 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
               type="text"
               required
               aria-label="Profile name"
+              aria-invalid={errors.name ? true : undefined}
+              aria-describedby={errors.name ? "profile-name-error" : undefined}
               className={`input input-sm input-bordered w-full${errors.name ? " input-error" : ""}`}
               value={form.name}
               onChange={(e) => {
@@ -301,7 +317,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
               placeholder="e.g. Sorbet (Copy)"
             />
             {errors.name && (
-              <p className="text-xs text-error mt-1">{errors.name}</p>
+              <p id="profile-name-error" className="text-xs text-error mt-1">{errors.name}</p>
             )}
           </section>
 
