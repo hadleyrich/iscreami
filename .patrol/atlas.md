@@ -83,3 +83,6 @@
 
 ## 2026-07-31
 - Skipped — no code quality issues worth fixing today (ruff clean, pytest 136 pass, tsc clean, no dead code/exports, no any types, no duplicated logic, no overly complex functions)
+
+## 2026-08-01
+- Dead code: orphan `RecipePickerModal` component (frontend/src/components/RecipePickerModal.tsx) never imported since Initial commit — load-recipe flow already served by RecipeCard → /calculator/:recipeId. Removed. Also removed unused `RecipeIngredientOut` type export from types.ts (schema still used by RecipeSchema).
