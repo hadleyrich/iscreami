@@ -1,5 +1,8 @@
 # Palette — Design / UX Patrol Log
 
+## 2026-08-01
+- Form validation errors were visual-only (red border + text, no aria-invalid/aria-describedby); Description and Aliases errors never rendered — added ARIA linkage on all invalid fields and focus-to-first-error on failed submit — opened PR #160
+
 ## 2026-07-31
 - Header brand rendered as `<h1>` on every page alongside the page-title `<h1>` (duplicate top-level heading, WCAG 1.3.1) — demoted brand to `<span>`, each page now has a single h1 — opened PR #155
 

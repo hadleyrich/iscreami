@@ -124,6 +124,7 @@ interface NumFieldProps {
 }
 
 function NumField({ label, unit, value, onChange, error, tooltip }: Readonly<NumFieldProps>) {
+  const errorId = `${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-error`;
   return (
     <label className="form-control">
       <div className="label py-1">
@@ -138,6 +139,8 @@ function NumField({ label, unit, value, onChange, error, tooltip }: Readonly<Num
             type="number"
             step="any"
             aria-label={label}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? errorId : undefined}
             className={`input input-sm input-bordered join-item w-full${error ? " input-error" : ""}`}
             value={value}
             onChange={onChange}
@@ -151,12 +154,14 @@ function NumField({ label, unit, value, onChange, error, tooltip }: Readonly<Num
           type="number"
           step="any"
           aria-label={label}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           className={`input input-sm input-bordered w-full${error ? " input-error" : ""}`}
           value={value}
           onChange={onChange}
         />
       )}
-      {error && <p className="label-text-alt text-error mt-0.5">{error}</p>}
+      {error && <p id={errorId} className="label-text-alt text-error mt-0.5">{error}</p>}
     </label>
   );
 }
@@ -209,6 +214,15 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
     const result = IngredientInputSchema.safeParse(form);
     if (!result.success) {
       setErrors(fieldErrors(result.error));
+      // Move focus to the first invalid field so keyboard and screen reader
+      // users land on the error instead of hunting through the form.
+      // rAF lets React paint the aria-invalid attributes before we query.
+      requestAnimationFrame(() => {
+        const firstInvalid = document.querySelector<HTMLElement>(
+          "#ingredient-form [aria-invalid='true']"
+        );
+        firstInvalid?.focus();
+      });
       return;
     }
     setErrors({});
@@ -256,13 +270,15 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 type="text"
                 required
                 aria-label="Name"
+                aria-invalid={errors.name ? true : undefined}
+                aria-describedby={errors.name ? "ingredient-name-error" : undefined}
                 className={`input input-sm input-bordered w-full${errors.name ? " input-error" : ""}`}
                 value={form.name}
                 onChange={textChange("name")}
                 placeholder="e.g. Heavy cream"
               />
               {errors.name && (
-                <p className="label-text-alt text-error mt-0.5">{errors.name}</p>
+                <p id="ingredient-name-error" className="label-text-alt text-error mt-0.5">{errors.name}</p>
               )}
             </label>
             <label className="form-control">
@@ -272,10 +288,15 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
               <input
                 type="text"
                 aria-label="Description"
-                className="input input-sm input-bordered w-full"
+                aria-invalid={errors.description ? true : undefined}
+                aria-describedby={errors.description ? "ingredient-description-error" : undefined}
+                className={`input input-sm input-bordered w-full${errors.description ? " input-error" : ""}`}
                 value={form.description}
                 onChange={textChange("description")}
               />
+              {errors.description && (
+                <p id="ingredient-description-error" className="label-text-alt text-error mt-0.5">{errors.description}</p>
+              )}
             </label>
             <div className="grid grid-cols-2 gap-3">
               <label className="form-control">
@@ -324,11 +345,16 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
               <input
                 type="text"
                 aria-label="Aliases"
-                className="input input-sm input-bordered w-full"
+                aria-invalid={errors.aliases ? true : undefined}
+                aria-describedby={errors.aliases ? "ingredient-aliases-error" : undefined}
+                className={`input input-sm input-bordered w-full${errors.aliases ? " input-error" : ""}`}
                 value={form.aliases}
                 onChange={textChange("aliases")}
                 placeholder="e.g. Whipping cream, Thickened cream"
               />
+              {errors.aliases && (
+                <p id="ingredient-aliases-error" className="label-text-alt text-error mt-0.5">{errors.aliases}</p>
+              )}
             </label>
           </section>
 
