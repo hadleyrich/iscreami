@@ -86,3 +86,6 @@
 
 ## 2026-08-01
 - Dead code: orphan `RecipePickerModal` component (frontend/src/components/RecipePickerModal.tsx) never imported since Initial commit — load-recipe flow already served by RecipeCard → /calculator/:recipeId. Removed. Also removed unused `RecipeIngredientOut` type export from types.ts (schema still used by RecipeSchema).
+
+## 2026-08-13
+- Dead exports: 6 zod response schemas in `frontend/src/types.ts` (IngredientSchema, RecipeSchema, etc.) exported but never used as runtime values — only z.infer type derivation. Converted to plain interfaces (restores AGENTS.md convention); input schemas stay zod. Opened PR #174.
