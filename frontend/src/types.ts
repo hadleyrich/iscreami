@@ -17,12 +17,11 @@ const numericNullable = z.preprocess(
 
 // ── IngredientCategory ────────────────────────────────────────────────────────
 
-export const IngredientCategorySchema = z.object({
-    id: z.number(),
-    name: z.string(),
-    slug: z.string(),
-});
-export type IngredientCategory = z.infer<typeof IngredientCategorySchema>;
+export interface IngredientCategory {
+    id: number;
+    name: string;
+    slug: string;
+}
 
 // ── Ingredient ────────────────────────────────────────────────────────────────
 
@@ -78,50 +77,76 @@ export const IngredientInputSchema = z.object({
 export type IngredientInput = z.infer<typeof IngredientInputSchema>;
 
 // Full API response — extends IngredientInput with server-generated fields
-export const IngredientSchema = IngredientInputSchema.extend({
-    id: z.string(),
-    source: z.string(),
-    source_id: z.string().nullable(),
-    pac: z.number(),
-    pod: z.number(),
-    total_solids_pct: z.number(),
-    created_at: z.string(),
-    updated_at: z.string(),
-    category: IngredientCategorySchema.nullable(),
-});
-export type Ingredient = z.infer<typeof IngredientSchema>;
+export interface Ingredient {
+    id: string;
+    name: string;
+    description: string | null;
+    category_id: number | null;
+    source: string;
+    source_id: string | null;
+    energy_kj_per_100g: number | null;
+    water_pct: number | null;
+    protein_pct: number | null;
+    total_fat_pct: number | null;
+    saturated_fat_pct: number | null;
+    trans_fat_pct: number | null;
+    carbohydrate_pct: number | null;
+    fiber_pct: number | null;
+    total_sugar_pct: number | null;
+    alcohol_pct: number | null;
+    sodium_mg: number | null;
+    sucrose_pct: number | null;
+    glucose_pct: number | null;
+    fructose_pct: number | null;
+    lactose_pct: number | null;
+    maltose_pct: number | null;
+    galactose_pct: number | null;
+    milk_fat_pct: number | null;
+    msnf_pct: number | null;
+    cocoa_butter_pct: number | null;
+    cocoa_solids_pct: number | null;
+    stabilizer_pct: number | null;
+    emulsifier_pct: number | null;
+    pac_override: number | null;
+    pod_override: number | null;
+    aliases: string[];
+    pac: number;
+    pod: number;
+    total_solids_pct: number;
+    created_at: string;
+    updated_at: string;
+    category: IngredientCategory | null;
+}
 
-export const PaginatedIngredientsSchema = z.object({
-    total: z.number(),
-    items: z.array(IngredientSchema),
-});
-export type PaginatedIngredients = z.infer<typeof PaginatedIngredientsSchema>;
+export interface PaginatedIngredients {
+    total: number;
+    items: Ingredient[];
+}
 
-export const TargetProfileSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    serving_temp_min: z.number().nullable(),
-    serving_temp_max: z.number().nullable(),
-    sweetness_min: z.number().nullable(),
-    sweetness_max: z.number().nullable(),
-    total_solids_min: z.number().nullable(),
-    total_solids_max: z.number().nullable(),
-    total_fat_min: z.number().nullable(),
-    total_fat_max: z.number().nullable(),
-    milk_fat_min: z.number().nullable(),
-    milk_fat_max: z.number().nullable(),
-    sugar_min: z.number().nullable(),
-    sugar_max: z.number().nullable(),
-    alcohol_min: z.number().nullable(),
-    alcohol_max: z.number().nullable(),
-    msnf_min: z.number().nullable(),
-    msnf_max: z.number().nullable(),
-    stabilizer_min: z.number().nullable(),
-    stabilizer_max: z.number().nullable(),
-    emulsifier_min: z.number().nullable(),
-    emulsifier_max: z.number().nullable(),
-});
-export type TargetProfile = z.infer<typeof TargetProfileSchema>;
+export interface TargetProfile {
+    id: string;
+    name: string;
+    serving_temp_min: number | null;
+    serving_temp_max: number | null;
+    sweetness_min: number | null;
+    sweetness_max: number | null;
+    total_solids_min: number | null;
+    total_solids_max: number | null;
+    total_fat_min: number | null;
+    total_fat_max: number | null;
+    milk_fat_min: number | null;
+    milk_fat_max: number | null;
+    sugar_min: number | null;
+    sugar_max: number | null;
+    alcohol_min: number | null;
+    alcohol_max: number | null;
+    msnf_min: number | null;
+    msnf_max: number | null;
+    stabilizer_min: number | null;
+    stabilizer_max: number | null;
+    emulsifier_min: number | null;
+    emulsifier_max: number | null;
+}
 
 export const TargetProfileInputSchema = z.object({
     name: z.string().min(1, "Name is required").max(255, "Name too long"),
@@ -148,26 +173,26 @@ export const TargetProfileInputSchema = z.object({
 });
 export type TargetProfileInput = z.infer<typeof TargetProfileInputSchema>;
 
-export const RecipeIngredientOutSchema = z.object({
-    id: z.number(),
-    ingredient_id: z.string(),
-    weight_grams: z.number(),
-    sort_order: z.number(),
-    ingredient: IngredientSchema,
-});
-export const RecipeSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    description: z.string().nullable(),
-    recipe_type: z.string().nullable(),
-    target_profile_id: z.string().nullable(),
-    target_profile: TargetProfileSchema.nullable(),
-    total_weight_grams: z.number(),
-    created_at: z.string(),
-    updated_at: z.string(),
-    ingredients: z.array(RecipeIngredientOutSchema),
-});
-export type Recipe = z.infer<typeof RecipeSchema>;
+export interface RecipeIngredientOut {
+    id: number;
+    ingredient_id: string;
+    weight_grams: number;
+    sort_order: number;
+    ingredient: Ingredient;
+}
+
+export interface Recipe {
+    id: string;
+    name: string;
+    description: string | null;
+    recipe_type: string | null;
+    target_profile_id: string | null;
+    target_profile: TargetProfile | null;
+    total_weight_grams: number;
+    created_at: string;
+    updated_at: string;
+    ingredients: RecipeIngredientOut[];
+}
 
 export interface CalculateIngredientInput {
     ingredient_id: string;
