@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-08-14
+- Duplicated eager-load options: `_RECIPE_LOAD_OPTIONS` (recipes.py, was 3× inline) and `_INGREDIENT_LOAD_OPTIONS` (ingredients.py, was 3× inline) extracted to shared module-level constants — opened PR #175
+
 ## 2026-07-28
 - Dead export: unused `RecipeIngredientInput` interface in `frontend/src/types.ts` — opened PR #150
 
