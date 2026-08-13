@@ -22,6 +22,13 @@ from api.schemas import (
 
 router = APIRouter(prefix="/ingredients", tags=["ingredients"])
 
+# Eager-load the relationships every ingredient endpoint needs. Shared so the
+# query options can't drift between list/get/update endpoints.
+_INGREDIENT_LOAD_OPTIONS = (
+    joinedload(Ingredient.category),
+    selectinload(Ingredient.aliases),
+)
+
 
 @router.get("", response_model=PaginatedIngredients)
 def list_ingredients(
@@ -32,10 +39,7 @@ def list_ingredients(
     offset: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=200)] = 50,
 ):
-    stmt = select(Ingredient).options(
-        joinedload(Ingredient.category),
-        selectinload(Ingredient.aliases),
-    )
+    stmt = select(Ingredient).options(*_INGREDIENT_LOAD_OPTIONS)
 
     if q:
         alias_subq = select(IngredientAlias.ingredient_id).where(
@@ -80,7 +84,7 @@ def get_ingredient(ingredient_id: uuid.UUID, db: DbSession):
     ingredient = db.get(
         Ingredient,
         ingredient_id,
-        options=[joinedload(Ingredient.category), selectinload(Ingredient.aliases)],
+        options=_INGREDIENT_LOAD_OPTIONS,
     )
     if not ingredient:
         raise HTTPException(404, "Ingredient not found")
@@ -106,7 +110,7 @@ def update_ingredient(ingredient_id: uuid.UUID, data: IngredientUpdate, db: DbSe
     ingredient = db.get(
         Ingredient,
         ingredient_id,
-        options=[joinedload(Ingredient.category), selectinload(Ingredient.aliases)],
+        options=_INGREDIENT_LOAD_OPTIONS,
     )
     if not ingredient:
         raise HTTPException(404, "Ingredient not found")

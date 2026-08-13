@@ -31,16 +31,16 @@ router = APIRouter(prefix="/recipes", tags=["recipes"])
 _MAX_IMPORT_SIZE = 5 * 1024 * 1024  # 5 MB
 _MAX_IMPORT_RECIPES = 200
 
+# Eager-load the relationships every recipe endpoint needs. Shared so the
+# query options can't drift between list/detail/export endpoints.
+_RECIPE_LOAD_OPTIONS = (
+    joinedload(Recipe.target_profile),
+    selectinload(Recipe.ingredients).joinedload(RecipeIngredient.ingredient),
+)
+
 
 def _load_recipe(db, recipe_id: uuid.UUID) -> Recipe:
-    stmt = (
-        select(Recipe)
-        .where(Recipe.id == recipe_id)
-        .options(
-            joinedload(Recipe.target_profile),
-            selectinload(Recipe.ingredients).joinedload(RecipeIngredient.ingredient),
-        )
-    )
+    stmt = select(Recipe).where(Recipe.id == recipe_id).options(*_RECIPE_LOAD_OPTIONS)
     recipe = db.scalars(stmt).unique().first()
     if not recipe:
         raise HTTPException(404, "Recipe not found")
@@ -75,10 +75,7 @@ def list_recipes(
 
     stmt = (
         select(Recipe)
-        .options(
-            joinedload(Recipe.target_profile),
-            selectinload(Recipe.ingredients).joinedload(RecipeIngredient.ingredient),
-        )
+        .options(*_RECIPE_LOAD_OPTIONS)
         .order_by(Recipe.updated_at.desc())
         .offset(offset)
         .limit(limit)
@@ -90,10 +87,7 @@ def list_recipes(
 @router.get("/export-all", response_model=list[RecipeExportOut])
 def export_all_recipes(db: DbSession):
     """Export all recipes as a JSON array with underscore keys."""
-    stmt = select(Recipe).options(
-        joinedload(Recipe.target_profile),
-        selectinload(Recipe.ingredients).joinedload(RecipeIngredient.ingredient),
-    )
+    stmt = select(Recipe).options(*_RECIPE_LOAD_OPTIONS)
     recipes = list(db.scalars(stmt).unique().all())
     return [build_export_single(recipe) for recipe in recipes]
 
