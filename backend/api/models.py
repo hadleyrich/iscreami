@@ -30,6 +30,20 @@ class IngredientCategory(Base):
     ingredients: Mapped[list["Ingredient"]] = relationship(back_populates="category")
 
 
+# The six sugar breakdown fields on Ingredient. Single source of truth —
+# PAC/POD calculation (services/pac.py, services/sweetness.py) and the
+# sweetener breakdown (services/calculator.py) all derive from this, so
+# adding a new sugar can't silently miss one of the three consumers.
+SUGAR_FIELDS: tuple[str, ...] = (
+    "sucrose",
+    "glucose",
+    "fructose",
+    "lactose",
+    "maltose",
+    "galactose",
+)
+
+
 class Ingredient(Base):
     __tablename__ = "ingredients"
 

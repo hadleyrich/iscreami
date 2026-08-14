@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from api.models import SUGAR_FIELDS
+
 if TYPE_CHECKING:
     from api.models import Ingredient
 
@@ -45,14 +47,7 @@ def ingredient_pac(ingredient: Ingredient) -> float:
     pac = 0.0
 
     # Check if we have any sugar breakdown data
-    sugar_fields = {
-        "sucrose": ingredient.sucrose_pct,
-        "glucose": ingredient.glucose_pct,
-        "fructose": ingredient.fructose_pct,
-        "lactose": ingredient.lactose_pct,
-        "maltose": ingredient.maltose_pct,
-        "galactose": ingredient.galactose_pct,
-    }
+    sugar_fields = {name: getattr(ingredient, f"{name}_pct") for name in SUGAR_FIELDS}
 
     has_breakdown = any(v is not None for v in sugar_fields.values())
 
