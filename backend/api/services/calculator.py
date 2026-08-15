@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from api.models import SUGAR_FIELDS
 from api.schemas import (
     CalculateResponse,
     CompositionResult,
@@ -131,15 +132,8 @@ def calculate_sweetness(
     for ingredient, weight_g in items:
         sweet_g = 0.0
         # Check for any sugars
-        for field in (
-            "sucrose_pct",
-            "glucose_pct",
-            "fructose_pct",
-            "lactose_pct",
-            "maltose_pct",
-            "galactose_pct",
-        ):
-            val = getattr(ingredient, field, None)
+        for name in SUGAR_FIELDS:
+            val = getattr(ingredient, f"{name}_pct", None)
             if val is not None and val > 0:
                 sweet_g += float(val) * weight_g / 100.0
 

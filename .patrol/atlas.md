@@ -1,5 +1,9 @@
 # Atlas — Code Quality Findings
 
+## 2026-08-15
+- Triplicated sugar-field list: identical `sugar_fields` dicts in `pac.py`/`sweetness.py` plus a third hardcoded tuple in `calculator.py` sweetener breakdown — extracted shared `SUGAR_FIELDS` constant in `models.py`, all three consumers derive from it — opened PR #177
+- AGENTS.md update blocked in queue session: Hermes hard-blocks writes to AGENTS.md (protected agent-instruction file) — approval always required, NOT bypassed by --yolo, fail-closed when no human channel. Queue-dispatched tasks asking to edit AGENTS.md should post the exact patch as a PR comment for interactive application; the guard forbids retrying or bypassing via terminal.
+
 ## 2026-08-14
 - Duplicated eager-load options: `_RECIPE_LOAD_OPTIONS` (recipes.py, was 3× inline) and `_INGREDIENT_LOAD_OPTIONS` (ingredients.py, was 3× inline) extracted to shared module-level constants — opened PR #175
 
