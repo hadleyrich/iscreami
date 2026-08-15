@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-08-16
+- Duplicated JSON blob-download logic in `RecipeCard.tsx` (handleExport) and `RecipesView.tsx` (handleExportAll) — extracted shared `downloadJson()` helper in `lib/download.ts`, both consumers now call it — opened PR #181
+
 ## 2026-08-15
 - Triplicated sugar-field list: identical `sugar_fields` dicts in `pac.py`/`sweetness.py` plus a third hardcoded tuple in `calculator.py` sweetener breakdown — extracted shared `SUGAR_FIELDS` constant in `models.py`, all three consumers derive from it — opened PR #177
 - AGENTS.md update blocked in queue session: Hermes hard-blocks writes to AGENTS.md (protected agent-instruction file) — approval always required, NOT bypassed by --yolo, fail-closed when no human channel. Queue-dispatched tasks asking to edit AGENTS.md should post the exact patch as a PR comment for interactive application; the guard forbids retrying or bypassing via terminal.
