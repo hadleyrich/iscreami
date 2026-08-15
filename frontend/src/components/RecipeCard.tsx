@@ -5,6 +5,7 @@ import { ArrowRight, Calendar, Download, Target, Trash2, Utensils, Weight } from
 import { deleteRecipe, exportRecipe } from "../api";
 import { useToast } from "../hooks/useToast";
 import { useEscape } from "../hooks/useEscape";
+import { downloadJson } from "../lib/download";
 import type { Recipe } from "../types";
 
 interface RecipeCardProps {
@@ -23,15 +24,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
     setExporting(true);
     try {
       const data = await exportRecipe(recipe.id);
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${recipe.name}.json`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
+      downloadJson(data, `${recipe.name}.json`);
       addToast("Recipe exported", "success");
     } catch (err) {
       addToast(err instanceof Error ? err.message : "Failed to export recipe", "error");

@@ -5,6 +5,7 @@ import { fetchRecipes, exportAllRecipes, importRecipes } from "../api";
 import { useState, useEffect } from "react";
 import { FileUploadModal } from "./FileUploadModal";
 import { useToast } from "../hooks/useToast";
+import { downloadJson } from "../lib/download";
 import { RecipeCard } from "./RecipeCard";
 
 export function RecipesView() {
@@ -30,15 +31,7 @@ export function RecipesView() {
     setExportAllLoading(true);
     try {
       const data = await exportAllRecipes();
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "recipes-export.json";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
+      downloadJson(data, "recipes-export.json");
       addToast(`Exported ${data.length} recipes`, "success");
     } catch (err) {
       addToast(err instanceof Error ? err.message : "Failed to export recipes", "error");
