@@ -3,6 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { CalculateResponse, Ingredient, Recipe, TargetProfile } from "../types";
 import { calculate, createRecipe, updateRecipe as apiUpdateRecipe, deleteRecipe as apiDeleteRecipe } from "../api";
 import { useToast } from "./useToast";
+import { errorMessage } from "../lib/errors";
 
 export interface RecipeRow {
     ingredient: Ingredient;
@@ -153,7 +154,7 @@ export function useRecipeCalculator() {
                 qc.invalidateQueries({ queryKey: ["recipes"] });
                 addToast(`Recipe "${name}" saved.`, "success");
             } catch (err) {
-                addToast(err instanceof Error ? err.message : "Failed to save recipe.", "error");
+                addToast(errorMessage(err, "Failed to save recipe."), "error");
             } finally {
                 setIsSaving(false);
             }
@@ -178,7 +179,7 @@ export function useRecipeCalculator() {
             qc.invalidateQueries({ queryKey: ["recipes"] });
             addToast(`Recipe "${saved.name}" updated.`, "success");
         } catch (err) {
-            addToast(err instanceof Error ? err.message : "Failed to update recipe.", "error");
+            addToast(errorMessage(err, "Failed to update recipe."), "error");
         } finally {
             setIsSaving(false);
         }
@@ -194,7 +195,7 @@ export function useRecipeCalculator() {
             addToast(`Recipe "${name}" deleted.`, "success");
             clearRecipe();
         } catch (err) {
-            addToast(err instanceof Error ? err.message : "Failed to delete recipe.", "error");
+            addToast(errorMessage(err, "Failed to delete recipe."), "error");
         } finally {
             setIsSaving(false);
         }

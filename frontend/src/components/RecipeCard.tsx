@@ -6,6 +6,7 @@ import { deleteRecipe, exportRecipe } from "../api";
 import { useToast } from "../hooks/useToast";
 import { useEscape } from "../hooks/useEscape";
 import { downloadJson } from "../lib/download";
+import { errorMessage } from "../lib/errors";
 import type { Recipe } from "../types";
 
 interface RecipeCardProps {
@@ -27,7 +28,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
       downloadJson(data, `${recipe.name}.json`);
       addToast("Recipe exported", "success");
     } catch (err) {
-      addToast(err instanceof Error ? err.message : "Failed to export recipe", "error");
+      addToast(errorMessage(err, "Failed to export recipe"), "error");
     } finally {
       setExporting(false);
     }
@@ -39,7 +40,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
       await queryClient.invalidateQueries({ queryKey: ["recipes"] });
       addToast("Recipe deleted", "success");
     } catch (err) {
-      addToast(err instanceof Error ? err.message : "Failed to delete recipe", "error");
+      addToast(errorMessage(err, "Failed to delete recipe"), "error");
     } finally {
       setDeleteConfirmOpen(false);
     }
