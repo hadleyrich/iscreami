@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-08-17
+- Duplicated `err instanceof Error ? err.message : fallback` idiom (8 sites across useRecipeCalculator.ts, RecipeCard.tsx, RecipesView.tsx, FileUploadModal.tsx) — extracted shared `errorMessage()` helper in `lib/errors.ts` — opened PR #182
+
 ## 2026-08-16
 - Duplicated JSON blob-download logic in `RecipeCard.tsx` (handleExport) and `RecipesView.tsx` (handleExportAll) — extracted shared `downloadJson()` helper in `lib/download.ts`, both consumers now call it — opened PR #181
 
