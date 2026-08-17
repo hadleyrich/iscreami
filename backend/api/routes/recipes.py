@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import uuid
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated, cast
 
 from fastapi import APIRouter, File, HTTPException, Query, UploadFile
 from sqlalchemy import func, select
@@ -16,6 +16,7 @@ from api.schemas import (
     PaginatedRecipes,
     RecipeCreate,
     RecipeExportOut,
+    RecipeIngredientInput,
     RecipeOut,
     RecipeUpdate,
 )
@@ -25,6 +26,9 @@ from api.services.export import (
     normalize_import_data,
     validate_import_data,
 )
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/recipes", tags=["recipes"])
 
@@ -47,7 +51,11 @@ def _load_recipe(db, recipe_id: uuid.UUID) -> Recipe:
     return recipe
 
 
-def _sync_ingredients(db, recipe: Recipe, ingredient_inputs: list) -> None:
+def _sync_ingredients(
+    db: Session,
+    recipe: Recipe,
+    ingredient_inputs: list[RecipeIngredientInput],
+) -> None:
     """Replace recipe ingredients with the given list."""
     # Remove existing
     for ri in recipe.ingredients:
@@ -56,13 +64,14 @@ def _sync_ingredients(db, recipe: Recipe, ingredient_inputs: list) -> None:
 
     # Add new
     for inp in ingredient_inputs:
-        ri = RecipeIngredient(
-            recipe_id=recipe.id,
-            ingredient_id=inp.ingredient_id,
-            weight_grams=inp.weight_grams,
-            sort_order=inp.sort_order,
+        db.add(
+            RecipeIngredient(
+                recipe_id=recipe.id,
+                ingredient_id=inp.ingredient_id,
+                weight_grams=inp.weight_grams,
+                sort_order=inp.sort_order,
+            )
         )
-        db.add(ri)
 
 
 @router.get("", response_model=PaginatedRecipes)
@@ -115,14 +124,7 @@ def create_recipe(data: RecipeCreate, db: DbSession):
     db.add(recipe)
     db.flush()
 
-    for inp in data.ingredients:
-        ri = RecipeIngredient(
-            recipe_id=recipe.id,
-            ingredient_id=inp.ingredient_id,
-            weight_grams=inp.weight_grams,
-            sort_order=inp.sort_order,
-        )
-        db.add(ri)
+    _sync_ingredients(db, recipe, data.ingredients)
 
     db.commit()
     return _load_recipe(db, recipe.id)
@@ -134,7 +136,12 @@ def update_recipe(recipe_id: uuid.UUID, data: RecipeUpdate, db: DbSession):
 
     payload = data.model_dump(exclude_unset=True)
     if "ingredients" in payload:
-        _sync_ingredients(db, recipe, data.ingredients)  # type: ignore[arg-type]
+        # model_dump includes explicitly-null ingredients, but only a real list is
+        # valid here. cast() is a runtime no-op: a null value still fails inside
+        # _sync_ingredients just as it did before.
+        _sync_ingredients(
+            db, recipe, cast(list[RecipeIngredientInput], data.ingredients)
+        )
         del payload["ingredients"]
     for field, value in payload.items():
         setattr(recipe, field, value)
