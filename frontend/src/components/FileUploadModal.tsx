@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Upload, X, AlertCircle, CheckCircle, Loader } from "lucide-react";
 import { useEscape } from "../hooks/useEscape";
+import { errorMessage } from "../lib/errors";
 
 interface Props {
   readonly open: boolean;
@@ -90,9 +91,7 @@ export function FileUploadModal({
       await onFileSelect(selectedFile);
       setSelectedFile(null);
     } catch (err) {
-      setInternalError(
-        err instanceof Error ? err.message : "Upload failed"
-      );
+      setInternalError(errorMessage(err, "Upload failed"));
     }
   };
 

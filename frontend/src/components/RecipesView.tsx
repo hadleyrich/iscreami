@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { FileUploadModal } from "./FileUploadModal";
 import { useToast } from "../hooks/useToast";
 import { downloadJson } from "../lib/download";
+import { errorMessage } from "../lib/errors";
 import { RecipeCard } from "./RecipeCard";
 
 export function RecipesView() {
@@ -34,7 +35,7 @@ export function RecipesView() {
       downloadJson(data, "recipes-export.json");
       addToast(`Exported ${data.length} recipes`, "success");
     } catch (err) {
-      addToast(err instanceof Error ? err.message : "Failed to export recipes", "error");
+      addToast(errorMessage(err, "Failed to export recipes"), "error");
     } finally {
       setExportAllLoading(false);
     }
@@ -54,7 +55,7 @@ export function RecipesView() {
       }, 2000);
       addToast(`Imported ${results.length} recipe${results.length === 1 ? "" : "s"}`, "success");
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : "Failed to import recipes";
+      const errMsg = errorMessage(err, "Failed to import recipes");
       setImportError(errMsg);
       addToast(errMsg, "error");
     } finally {
