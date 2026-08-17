@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-08-18
+- Duplicated `RecipeIngredient` construction loop in `recipes.py` `create_recipe` + `_sync_ingredients` — create path now delegates to the shared helper; helper gained full type annotations (`Session`, `list[RecipeIngredientInput]`), `type: ignore[arg-type]` on update path replaced with commented cast — opened PR #185
+
 ## 2026-08-16
 - Duplicated JSON blob-download logic in `RecipeCard.tsx` (handleExport) and `RecipesView.tsx` (handleExportAll) — extracted shared `downloadJson()` helper in `lib/download.ts`, both consumers now call it — opened PR #181
 
