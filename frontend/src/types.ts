@@ -23,6 +23,31 @@ export interface IngredientCategory {
     slug: string;
 }
 
+// ── Recipe export ─────────────────────────────────────────────────────────────
+// Mirrors backend RecipeExportOut / RecipeExportMetrics (schemas.py).
+
+export interface RecipeExportMetrics {
+    pac_mix: number;
+    pac_water: number | null;
+    pod: number;
+    freezing_point_c: number;
+    free_water_g: number;
+    sugar_solids_g: number;
+}
+
+export interface RecipeExport {
+    id: string;
+    name: string;
+    description: string | null;
+    recipe_type: string | null;
+    created_at: string;
+    updated_at: string;
+    total_weight_grams: number;
+    target_profile: TargetProfile | null;
+    ingredients: RecipeIngredientOut[];
+    calculated_metrics: RecipeExportMetrics;
+}
+
 // ── Ingredient ────────────────────────────────────────────────────────────────
 
 // Fields the user can create/edit — used for form validation and API payloads

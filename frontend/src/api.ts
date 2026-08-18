@@ -8,6 +8,7 @@ import type {
     IngredientInput,
     PaginatedIngredients,
     Recipe,
+    RecipeExport,
     TargetProfile,
     TargetProfileInput,
 } from "./types";
@@ -141,11 +142,11 @@ export function calculate(data: CalculateRequest): Promise<CalculateResponse> {
 
 // --- Export/Import ---
 
-export async function exportRecipe(id: string): Promise<unknown> {
+export async function exportRecipe(id: string): Promise<RecipeExport> {
     return request(`/recipes/${id}/export`);
 }
 
-export async function exportAllRecipes(): Promise<unknown[]> {
+export async function exportAllRecipes(): Promise<RecipeExport[]> {
     return request(`/recipes/export-all`);
 }
 
