@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-08-20
+- Swallowed-error scope in `_resolve_import_ingredient` (`export.py`) — the `try/except (ValueError, TypeError)` wrapped both the UUID parse and the DB lookup, so a DB-layer error could be silently treated as "ingredient not found" during import. Narrowed to parse-only, matching `_validate_ingredient`. Opened PR #189.
+
 ## 2026-08-18
 - Duplicated `RecipeIngredient` construction loop in `recipes.py` `create_recipe` + `_sync_ingredients` — create path now delegates to the shared helper; helper gained full type annotations (`Session`, `list[RecipeIngredientInput]`), `type: ignore[arg-type]` on update path replaced with commented cast — opened PR #185
 
