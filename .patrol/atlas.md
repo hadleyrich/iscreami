@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-08-23
+- Skipped — already 2+ open PRs from me on this repo (#188 RecipeExport typing, #189 narrow try scope)
+
 ## 2026-08-18
 - Duplicated `RecipeIngredient` construction loop in `recipes.py` `create_recipe` + `_sync_ingredients` — create path now delegates to the shared helper; helper gained full type annotations (`Session`, `list[RecipeIngredientInput]`), `type: ignore[arg-type]` on update path replaced with commented cast — opened PR #185
 
