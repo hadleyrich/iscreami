@@ -108,3 +108,6 @@
 
 ## 2026-08-13
 - Dead exports: 6 zod response schemas in `frontend/src/types.ts` (IngredientSchema, RecipeSchema, etc.) exported but never used as runtime values — only z.infer type derivation. Converted to plain interfaces (restores AGENTS.md convention); input schemas stay zod. Opened PR #174.
+
+## 2026-08-25
+- Skipped — already 2+ open PRs from me on this repo (#188 RecipeExport typing, #189 narrow try scope)
