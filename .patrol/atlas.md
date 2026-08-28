@@ -117,3 +117,6 @@
 
 ## 2026-08-28
 - Skipped — already 2+ open PRs from me on this repo (#188 RecipeExport typing, #189 narrow try scope)
+
+## 2026-08-29
+- Skipped — already 2+ open PRs from me on this repo (#188 RecipeExport typing, #189 narrow try scope)
