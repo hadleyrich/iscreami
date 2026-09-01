@@ -1,5 +1,8 @@
 # Forge — Security/Correctness Findings
 
+## 2026-09-01
+- zizmor v1.30.0 `cache-poisoning` audit now flags the `enable-cache: ${{ !startsWith(github.ref, 'refs/tags/') }}` pattern on `astral-sh/setup-uv` pinned at v10.x. The audit's conditional-disable heuristic only applies to plain boolean control fields; setup-uv's coordinate is an `any([...])` composite (Exact("true") for v10+, boolish for <v10), so `CacheControlField::extract` never matches and any expression is treated as Conditional → high-severity finding + unsafe auto-fix → CI fails (exit 14). Fix verified against v1.30.0: set `enable-cache: false` (zizmor's own auto-fix). Applied in PR #193 (same change as PR #186). Removing the field entirely is also safe for zizmor but explicit `false` is clearer.
+
 ## 2026-07-13
 - Merged `origin/main` into `renovate/typescript-7.x` (PR #97). Resolved conflict in `.patrol/forge.md` — kept both previous entries.
 
