@@ -226,20 +226,35 @@ class TestRoundTrip:
             total_solids_max=45.0,
         )
 
-        # Create recipe with target profile and ingredients
+        # Create recipe with target profile and ingredients.
+        # Ingredient sort_order is deliberately scrambled relative to insertion
+        # order so the ordering assertion below is a genuine guard: it only
+        # passes if Recipe.ingredients is actually ordered by sort_order, and it
+        # would fail if build_export_single emitted them in any other order.
         recipe = db_recipe_factory(
             name="Test Recipe",
             description="A test recipe",
             recipe_type="gelato",
             target_profile_id=profile.id,
             ingredients=[
-                (ing1, 200.0),
-                (ing2, 800.0),
+                (ing1, 200.0, 1),
+                (ing2, 800.0, 0),
             ],
         )
 
         # Export the recipe
         export_data = build_export_single(recipe)
+
+        # Verify export output preserves sort_order ordering. Assert directly
+        # against the expected order instead of sorting both sides, so a
+        # regression in export ordering is caught rather than masked.
+        expected_order = sorted(recipe.ingredients, key=lambda x: x.sort_order)
+        assert [i.ingredient_id for i in export_data.ingredients] == [
+            ri.ingredient_id for ri in expected_order
+        ]
+        assert [i.sort_order for i in export_data.ingredients] == [
+            ri.sort_order for ri in expected_order
+        ]
 
         # Verify export has the profile (Pydantic model, use attributes)
         assert export_data.target_profile is not None
