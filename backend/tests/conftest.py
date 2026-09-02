@@ -163,14 +163,15 @@ def make_profile_orm(db_session: Session, **kwargs) -> TargetProfile:
 
 def make_recipe_orm(
     db_session: Session,
-    ingredients: list[tuple[Ingredient, float]] | None = None,
+    ingredients: list[tuple[Ingredient, float, int | None]] | None = None,
     **kwargs,
 ) -> Recipe:
     """Factory to create a real Recipe ORM object in the database.
 
     Args:
         db_session: Database session
-        ingredients: List of (Ingredient, weight_grams) tuples to add
+        ingredients: List of (Ingredient, weight_grams, sort_order) tuples to add.
+            A None sort_order falls back to the tuple's position in the list.
         **kwargs: Other Recipe fields (name, description, etc.)
     """
     recipe = Recipe(
@@ -184,12 +185,13 @@ def make_recipe_orm(
     db_session.flush()
 
     if ingredients:
-        for idx, (ingredient, weight_g) in enumerate(ingredients):
+        for idx, entry in enumerate(ingredients):
+            ingredient, weight_g, sort_order = entry
             ri = RecipeIngredient(
                 recipe_id=recipe.id,
                 ingredient_id=ingredient.id,
                 weight_grams=weight_g,
-                sort_order=idx,
+                sort_order=idx if sort_order is None else sort_order,
             )
             db_session.add(ri)
         db_session.flush()
@@ -222,7 +224,7 @@ def db_recipe_factory(test_db: Session):
     """Factory fixture for creating real Recipe objects."""
 
     def _factory(
-        ingredients: list[tuple[Ingredient, float]] | None = None,
+        ingredients: list[tuple[Ingredient, float, int | None]] | None = None,
         **kwargs,
     ) -> Recipe:
         return make_recipe_orm(test_db, ingredients=ingredients, **kwargs)

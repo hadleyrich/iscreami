@@ -27,10 +27,10 @@ def build_export_single(
 
     Returns a Pydantic model for validation and serialization.
     """
-    # Prepare ingredient list for calculator
+    # Prepare ingredient list for calculator (recipe.ingredients is already
+    # ordered by sort_order — see models.Recipe.ingredients)
     items: list[tuple[Ingredient, float]] = [
-        (ing.ingredient, float(ing.weight_grams))
-        for ing in sorted(recipe.ingredients, key=lambda x: x.sort_order)
+        (ing.ingredient, float(ing.weight_grams)) for ing in recipe.ingredients
     ]
 
     # Calculate metrics
@@ -65,7 +65,7 @@ def build_export_single(
             "updated_at": recipe.updated_at.isoformat(),
             "total_weight_grams": float(total_weight_g),
             "target_profile": recipe.target_profile,
-            "ingredients": sorted(recipe.ingredients, key=lambda x: x.sort_order),
+            "ingredients": recipe.ingredients,
             "calculated_metrics": calculated_metrics,
         }
     )

@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-09-03
+- Redundant `sorted(recipe.ingredients, ...)` ×2 in `build_export_single` (`export.py`) — relationship already declares `order_by=sort_order`, so the sorts were dead work. Dropped them. Opened PR #198.
+
 ## 2026-08-23
 - Skipped — already 2+ open PRs from me on this repo (#188 RecipeExport typing, #189 narrow try scope)
 
