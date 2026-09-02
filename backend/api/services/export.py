@@ -155,13 +155,14 @@ def _resolve_import_ingredient(
     if isinstance(ingredient_id_str, str):
         try:
             ingredient_id = uuid.UUID(ingredient_id_str)
+        except (ValueError, TypeError):
+            ingredient_id = None
+        if ingredient_id is not None:
             by_id = db_session.scalars(
                 select(Ingredient).where(Ingredient.id == ingredient_id)
             ).first()
             if by_id is not None:
                 return by_id
-        except (ValueError, TypeError):
-            pass
 
     ingredient_data = ing.get("ingredient")
     if not isinstance(ingredient_data, dict):
