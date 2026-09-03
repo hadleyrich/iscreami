@@ -138,3 +138,6 @@
 
 ## 2026-09-02
 - Skipped — already 2+ open PRs from me on this repo (#188 RecipeExport typing, #189 narrow try scope)
+
+## 2026-09-04
+- Skipped — no code quality issues worth fixing today (ruff/mypy clean, 136 tests pass, tsc/eslint clean, no dead code or duplicated logic)
