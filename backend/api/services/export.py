@@ -110,6 +110,14 @@ def _validate_recipe(recipe_data: dict, idx: int, db_session: Session) -> list[s
     return errors
 
 
+def _safe_uuid(value: str) -> uuid.UUID | None:
+    """Parse a UUID string, returning None if it isn't a valid UUID."""
+    try:
+        return uuid.UUID(value)
+    except (ValueError, TypeError):
+        return None
+
+
 def _validate_ingredient(
     ing: dict,
     recipe_prefix: str,
@@ -125,11 +133,7 @@ def _validate_ingredient(
         return errors
 
     ingredient_id_str = ing["ingredient_id"]
-    ingredient_id: uuid.UUID | None = None
-    try:
-        ingredient_id = uuid.UUID(ingredient_id_str)
-    except (ValueError, TypeError):
-        ingredient_id = None
+    ingredient_id = _safe_uuid(ingredient_id_str)
 
     ingredient = _resolve_import_ingredient(ing, db_session)
     if ingredient is None:
@@ -153,10 +157,7 @@ def _resolve_import_ingredient(
     """Resolve imported ingredient by UUID, then by source/source_id, then by name."""
     ingredient_id_str = ing.get("ingredient_id")
     if isinstance(ingredient_id_str, str):
-        try:
-            ingredient_id = uuid.UUID(ingredient_id_str)
-        except (ValueError, TypeError):
-            ingredient_id = None
+        ingredient_id = _safe_uuid(ingredient_id_str)
         if ingredient_id is not None:
             by_id = db_session.scalars(
                 select(Ingredient).where(Ingredient.id == ingredient_id)
