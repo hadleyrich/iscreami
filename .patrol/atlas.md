@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-09-06
+- Duplicated ingredient-payload builder (`rows.map((r, idx) => ({...sort_order: idx}))`) in `useRecipeCalculator.ts` `saveAsNewRecipe` + `saveCurrentRecipe` — extracted shared `toIngredientInputs()` helper. Opened PR #203.
+
 ## 2026-09-03
 - Redundant `sorted(recipe.ingredients, ...)` ×2 in `build_export_single` (`export.py`) — relationship already declares `order_by=sort_order`, so the sorts were dead work. Dropped them. Opened PR #198.
 
