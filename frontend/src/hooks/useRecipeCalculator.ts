@@ -11,6 +11,21 @@ export interface RecipeRow {
     sort_order: number;
 }
 
+interface RecipeIngredientInput {
+    ingredient_id: string;
+    weight_grams: number;
+    sort_order: number;
+}
+
+// Rows are persisted in display order; sort_order mirrors the array index.
+function toIngredientInputs(rows: RecipeRow[]): RecipeIngredientInput[] {
+    return rows.map((r, idx) => ({
+        ingredient_id: r.ingredient.id,
+        weight_grams: r.weight_grams,
+        sort_order: idx,
+    }));
+}
+
 export function useRecipeCalculator() {
     const [rows, setRows] = useState<RecipeRow[]>([]);
     const [result, setResult] = useState<CalculateResponse | null>(null);
@@ -144,11 +159,7 @@ export function useRecipeCalculator() {
                 const saved = await createRecipe({
                     name,
                     target_profile_id: profile?.id ?? null,
-                    ingredients: rows.map((r, idx) => ({
-                        ingredient_id: r.ingredient.id,
-                        weight_grams: r.weight_grams,
-                        sort_order: idx,
-                    })),
+                    ingredients: toIngredientInputs(rows),
                 });
                 setCurrentRecipe(saved);
                 qc.invalidateQueries({ queryKey: ["recipes"] });
@@ -169,11 +180,7 @@ export function useRecipeCalculator() {
             const saved = await apiUpdateRecipe(currentRecipe.id, {
                 name: currentRecipe.name,
                 target_profile_id: profile?.id ?? null,
-                ingredients: rows.map((r, idx) => ({
-                    ingredient_id: r.ingredient.id,
-                    weight_grams: r.weight_grams,
-                    sort_order: idx,
-                })),
+                ingredients: toIngredientInputs(rows),
             });
             setCurrentRecipe(saved);
             qc.invalidateQueries({ queryKey: ["recipes"] });
