@@ -141,3 +141,6 @@
 
 ## 2026-09-04
 - Skipped — no code quality issues worth fixing today (ruff/mypy clean, 136 tests pass, tsc/eslint clean, no dead code or duplicated logic)
+
+## 2026-09-05
+- Duplicated `uuid.UUID(...)` + `try/except (ValueError, TypeError)` idiom in `export.py` — `_validate_ingredient` and `_resolve_import_ingredient` both parsed an imported ingredient ID with the same fallback. Extracted shared `_safe_uuid()` helper so the pattern can't drift between the two import paths. Opened PR #200.
