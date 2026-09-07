@@ -1,6 +1,7 @@
 # Atlas — Code Quality Findings
 
-## 2026-09-06
+## 2026-09-07
+- Duplicated `textChange`/`numChange` change-handlers in `IngredientFormModal.tsx` — byte-identical bodies differing only in event-param type. Consolidated into a single `fieldChange()` handler. Opened PR #205.
 - Duplicated ingredient-payload builder (`rows.map((r, idx) => ({...sort_order: idx}))`) in `useRecipeCalculator.ts` `saveAsNewRecipe` + `saveCurrentRecipe` — extracted shared `toIngredientInputs()` helper. Opened PR #203.
 
 ## 2026-09-03

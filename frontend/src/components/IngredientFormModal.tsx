@@ -180,15 +180,10 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
     queryFn: fetchCategories,
   });
 
-  function textChange(key: keyof FormFields) {
+  // One handler for text, select, and number fields — they all just write
+  // a raw string value and clear the field's prior validation error.
+  function fieldChange(key: keyof FormFields) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setErrors((prev) => { const next = { ...prev }; delete next[key]; return next; });
-      setForm((prev) => ({ ...prev, [key]: e.target.value }));
-    };
-  }
-
-  function numChange(key: keyof FormFields) {
-    return (e: React.ChangeEvent<HTMLInputElement>) => {
       setErrors((prev) => { const next = { ...prev }; delete next[key]; return next; });
       setForm((prev) => ({ ...prev, [key]: e.target.value }));
     };
@@ -274,7 +269,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 aria-describedby={errors.name ? "ingredient-name-error" : undefined}
                 className={`input input-sm input-bordered w-full${errors.name ? " input-error" : ""}`}
                 value={form.name}
-                onChange={textChange("name")}
+                onChange={fieldChange("name")}
                 placeholder="e.g. Heavy cream"
               />
               {errors.name && (
@@ -292,7 +287,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 aria-describedby={errors.description ? "ingredient-description-error" : undefined}
                 className={`input input-sm input-bordered w-full${errors.description ? " input-error" : ""}`}
                 value={form.description}
-                onChange={textChange("description")}
+                onChange={fieldChange("description")}
               />
               {errors.description && (
                 <p id="ingredient-description-error" className="label-text-alt text-error mt-0.5">{errors.description}</p>
@@ -306,7 +301,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 <select
                   className="select select-sm select-bordered w-full"
                   value={form.category_id}
-                  onChange={textChange("category_id")}
+                  onChange={fieldChange("category_id")}
                 >
                   <option value="">— None —</option>
                   {categories?.map((c) => (
@@ -322,7 +317,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 label="Stabilizer"
                 unit="g"
                 value={form.stabilizer_pct}
-                onChange={numChange("stabilizer_pct")}
+                onChange={fieldChange("stabilizer_pct")}
                 error={errors.stabilizer_pct}
                 tooltip={TOOLTIPS.stabilizer}
               />
@@ -330,7 +325,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 label="Emulsifier"
                 unit="g"
                 value={form.emulsifier_pct}
-                onChange={numChange("emulsifier_pct")}
+                onChange={fieldChange("emulsifier_pct")}
                 error={errors.emulsifier_pct}
                 tooltip={TOOLTIPS.emulsifier}
               />
@@ -349,7 +344,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 aria-describedby={errors.aliases ? "ingredient-aliases-error" : undefined}
                 className={`input input-sm input-bordered w-full${errors.aliases ? " input-error" : ""}`}
                 value={form.aliases}
-                onChange={textChange("aliases")}
+                onChange={fieldChange("aliases")}
                 placeholder="e.g. Whipping cream, Thickened cream"
               />
               {errors.aliases && (
@@ -370,77 +365,77 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 label="Energy"
                 unit="kJ"
                 value={form.energy_kj_per_100g}
-                onChange={numChange("energy_kj_per_100g")}
+                onChange={fieldChange("energy_kj_per_100g")}
                 error={errors.energy_kj_per_100g}
               />
               <NumField
                 label="Water"
                 unit="g"
                 value={form.water_pct}
-                onChange={numChange("water_pct")}
+                onChange={fieldChange("water_pct")}
                 error={errors.water_pct}
               />
               <NumField
                 label="Protein"
                 unit="g"
                 value={form.protein_pct}
-                onChange={numChange("protein_pct")}
+                onChange={fieldChange("protein_pct")}
                 error={errors.protein_pct}
               />
               <NumField
                 label="Total Fat"
                 unit="g"
                 value={form.total_fat_pct}
-                onChange={numChange("total_fat_pct")}
+                onChange={fieldChange("total_fat_pct")}
                 error={errors.total_fat_pct}
               />
               <NumField
                 label="Saturated Fat"
                 unit="g"
                 value={form.saturated_fat_pct}
-                onChange={numChange("saturated_fat_pct")}
+                onChange={fieldChange("saturated_fat_pct")}
                 error={errors.saturated_fat_pct}
               />
               <NumField
                 label="Trans Fat"
                 unit="g"
                 value={form.trans_fat_pct}
-                onChange={numChange("trans_fat_pct")}
+                onChange={fieldChange("trans_fat_pct")}
                 error={errors.trans_fat_pct}
               />
               <NumField
                 label="Carbohydrates"
                 unit="g"
                 value={form.carbohydrate_pct}
-                onChange={numChange("carbohydrate_pct")}
+                onChange={fieldChange("carbohydrate_pct")}
                 error={errors.carbohydrate_pct}
               />
               <NumField
                 label="Fiber"
                 unit="g"
                 value={form.fiber_pct}
-                onChange={numChange("fiber_pct")}
+                onChange={fieldChange("fiber_pct")}
                 error={errors.fiber_pct}
               />
               <NumField
                 label="Total Sugar"
                 unit="g"
                 value={form.total_sugar_pct}
-                onChange={numChange("total_sugar_pct")}
+                onChange={fieldChange("total_sugar_pct")}
                 error={errors.total_sugar_pct}
               />
               <NumField
                 label="Alcohol"
                 unit="g"
                 value={form.alcohol_pct}
-                onChange={numChange("alcohol_pct")}
+                onChange={fieldChange("alcohol_pct")}
                 error={errors.alcohol_pct}
               />
               <NumField
                 label="Sodium"
                 unit="mg"
                 value={form.sodium_mg}
-                onChange={numChange("sodium_mg")}
+                onChange={fieldChange("sodium_mg")}
                 error={errors.sodium_mg}
               />
             </div>
@@ -458,42 +453,42 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 label="Sucrose"
                 unit="g"
                 value={form.sucrose_pct}
-                onChange={numChange("sucrose_pct")}
+                onChange={fieldChange("sucrose_pct")}
                 error={errors.sucrose_pct}
               />
               <NumField
                 label="Glucose"
                 unit="g"
                 value={form.glucose_pct}
-                onChange={numChange("glucose_pct")}
+                onChange={fieldChange("glucose_pct")}
                 error={errors.glucose_pct}
               />
               <NumField
                 label="Fructose"
                 unit="g"
                 value={form.fructose_pct}
-                onChange={numChange("fructose_pct")}
+                onChange={fieldChange("fructose_pct")}
                 error={errors.fructose_pct}
               />
               <NumField
                 label="Lactose"
                 unit="g"
                 value={form.lactose_pct}
-                onChange={numChange("lactose_pct")}
+                onChange={fieldChange("lactose_pct")}
                 error={errors.lactose_pct}
               />
               <NumField
                 label="Maltose"
                 unit="g"
                 value={form.maltose_pct}
-                onChange={numChange("maltose_pct")}
+                onChange={fieldChange("maltose_pct")}
                 error={errors.maltose_pct}
               />
               <NumField
                 label="Galactose"
                 unit="g"
                 value={form.galactose_pct}
-                onChange={numChange("galactose_pct")}
+                onChange={fieldChange("galactose_pct")}
                 error={errors.galactose_pct}
               />
             </div>
@@ -511,28 +506,28 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 label="Milk Fat"
                 unit="g"
                 value={form.milk_fat_pct}
-                onChange={numChange("milk_fat_pct")}
+                onChange={fieldChange("milk_fat_pct")}
                 error={errors.milk_fat_pct}
               />
               <NumField
                 label="MSNF"
                 unit="g"
                 value={form.msnf_pct}
-                onChange={numChange("msnf_pct")}
+                onChange={fieldChange("msnf_pct")}
                 error={errors.msnf_pct}
               />
               <NumField
                 label="Cocoa Butter"
                 unit="g"
                 value={form.cocoa_butter_pct}
-                onChange={numChange("cocoa_butter_pct")}
+                onChange={fieldChange("cocoa_butter_pct")}
                 error={errors.cocoa_butter_pct}
               />
               <NumField
                 label="Cocoa Solids"
                 unit="g"
                 value={form.cocoa_solids_pct}
-                onChange={numChange("cocoa_solids_pct")}
+                onChange={fieldChange("cocoa_solids_pct")}
                 error={errors.cocoa_solids_pct}
               />
             </div>
@@ -553,7 +548,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 label="PAC override"
                 unit=""
                 value={form.pac_override}
-                onChange={numChange("pac_override")}
+                onChange={fieldChange("pac_override")}
                 error={errors.pac_override}
                 tooltip={TOOLTIPS.ingredientPacOverride}
               />
@@ -561,7 +556,7 @@ export function IngredientFormModal({ open, ingredient, onClose }: Readonly<Prop
                 label="POD override"
                 unit=""
                 value={form.pod_override}
-                onChange={numChange("pod_override")}
+                onChange={fieldChange("pod_override")}
                 error={errors.pod_override}
                 tooltip={TOOLTIPS.ingredientPodOverride}
               />
