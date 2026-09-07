@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-09-08
+- Duplicated debounce logic in `IngredientSearch.tsx` — hand-rolled `useState` + `setTimeout`/`clearTimeout` to build `debouncedQuery`, duplicating the shared `useDebouncedValue` hook (already used by `IngredientsView.tsx`). Replaced with `useDebouncedValue(query.trim(), 200)` and dropped the redundant `setDebouncedQuery("")` reset in `handleSelect`. Opened PR #206.
+
 ## 2026-09-07
 - Duplicated `textChange`/`numChange` change-handlers in `IngredientFormModal.tsx` — byte-identical bodies differing only in event-param type. Consolidated into a single `fieldChange()` handler. Opened PR #205.
 - Duplicated ingredient-payload builder (`rows.map((r, idx) => ({...sort_order: idx}))`) in `useRecipeCalculator.ts` `saveAsNewRecipe` + `saveCurrentRecipe` — extracted shared `toIngredientInputs()` helper. Opened PR #203.
