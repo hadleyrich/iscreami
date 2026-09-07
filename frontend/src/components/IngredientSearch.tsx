@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchIngredients } from "../api";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import type { Ingredient } from "../types";
 
 const DROPDOWN_ID = "ingredient-search-listbox";
@@ -11,19 +12,13 @@ interface IngredientSearchProps {
 
 export function IngredientSearch({ onSelect }: IngredientSearchProps) {
   const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const debouncedQuery = useDebouncedValue(query.trim(), 200);
   // "dismissed" tracks whether the user has explicitly closed the dropdown
   // (Escape or click-outside). Resets automatically on any input change or focus.
   const [dismissed, setDismissed] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-
-  // Update the debounced query inside the timer callback (never synchronously)
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedQuery(query.trim()), 200);
-    return () => clearTimeout(t);
-  }, [query]);
 
   const { data, isFetching } = useQuery({
     queryKey: ["ingredient-search", debouncedQuery],
@@ -72,7 +67,8 @@ export function IngredientSearch({ onSelect }: IngredientSearchProps) {
   function handleSelect(ing: Ingredient) {
     onSelect(ing);
     setQuery("");
-    setDebouncedQuery("");
+    // The debounced query follows query.trim() via useDebouncedValue, so clearing
+    // the input also resets the search.
     setDismissed(true);
     setActiveIndex(-1);
   }
