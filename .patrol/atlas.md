@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-09-09
+- Duplicated `try/except IntegrityError` commit handler in `delete_ingredient` (`ingredients.py`) and `delete_profile` (`profiles.py`) — both rolled back and re-raised a 409 on FK-constraint-blocked deletes. Extracted shared `commit_or_conflict(db, message)` into `db.py`. Opened PR #209.
+
 ## 2026-09-08
 - Duplicated debounce logic in `IngredientSearch.tsx` — hand-rolled `useState` + `setTimeout`/`clearTimeout` to build `debouncedQuery`, duplicating the shared `useDebouncedValue` hook (already used by `IngredientsView.tsx`). Replaced with `useDebouncedValue(query.trim(), 200)` and dropped the redundant `setDebouncedQuery("")` reset in `handleSelect`. Opened PR #206.
 
