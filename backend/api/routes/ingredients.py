@@ -7,10 +7,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import case, func, or_, select
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload, selectinload
 
-from api.db import NOT_FOUND_RESPONSE, DbSession
+from api.db import NOT_FOUND_RESPONSE, DbSession, commit_or_conflict
 from api.models import Ingredient, IngredientAlias, IngredientCategory
 from api.schemas import (
     IngredientCategoryOut,
@@ -135,13 +134,9 @@ def delete_ingredient(ingredient_id: uuid.UUID, db: DbSession):
     if not ingredient:
         raise HTTPException(404, "Ingredient not found")
     db.delete(ingredient)
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            409, "Ingredient is used in one or more recipes and cannot be deleted"
-        ) from None
+    commit_or_conflict(
+        db, "Ingredient is used in one or more recipes and cannot be deleted"
+    )
 
 
 # --- Categories ---
