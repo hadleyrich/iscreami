@@ -7,7 +7,7 @@ import uuid
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
 
-from api.db import NOT_FOUND_RESPONSE, DbSession, commit_or_conflict
+from api.db import NOT_FOUND_RESPONSE, DbSession, apply_updates, commit_or_conflict
 from api.models import TargetProfile
 from api.schemas import TargetProfileCreate, TargetProfileOut, TargetProfileUpdate
 
@@ -45,8 +45,7 @@ def update_profile(profile_id: uuid.UUID, data: TargetProfileUpdate, db: DbSessi
     profile = db.get(TargetProfile, profile_id)
     if not profile:
         raise HTTPException(404, "Target profile not found")
-    for key, value in data.model_dump(exclude_unset=True).items():
-        setattr(profile, key, value)
+    apply_updates(profile, data.model_dump(exclude_unset=True))
     db.commit()
     db.refresh(profile)
     return profile
