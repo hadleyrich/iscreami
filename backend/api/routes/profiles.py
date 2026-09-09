@@ -6,9 +6,8 @@ import uuid
 
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
 
-from api.db import NOT_FOUND_RESPONSE, DbSession
+from api.db import NOT_FOUND_RESPONSE, DbSession, commit_or_conflict
 from api.models import TargetProfile
 from api.schemas import TargetProfileCreate, TargetProfileOut, TargetProfileUpdate
 
@@ -59,10 +58,6 @@ def delete_profile(profile_id: uuid.UUID, db: DbSession):
     if not profile:
         raise HTTPException(404, "Target profile not found")
     db.delete(profile)
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(
-            409, "Profile is used in one or more recipes and cannot be deleted"
-        ) from None
+    commit_or_conflict(
+        db, "Profile is used in one or more recipes and cannot be deleted"
+    )
