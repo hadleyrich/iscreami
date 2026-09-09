@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import case, func, or_, select
 from sqlalchemy.orm import joinedload, selectinload
 
-from api.db import NOT_FOUND_RESPONSE, DbSession, commit_or_conflict
+from api.db import NOT_FOUND_RESPONSE, DbSession, apply_updates, commit_or_conflict
 from api.models import Ingredient, IngredientAlias, IngredientCategory
 from api.schemas import (
     IngredientCategoryOut,
@@ -117,8 +117,7 @@ def update_ingredient(ingredient_id: uuid.UUID, data: IngredientUpdate, db: DbSe
     payload = data.model_dump(exclude_unset=True)
     alias_names: list[str] | None = payload.pop("aliases", None)
 
-    for key, value in payload.items():
-        setattr(ingredient, key, value)
+    apply_updates(ingredient, payload)
 
     if alias_names is not None:
         ingredient.aliases = [IngredientAlias(alias=a) for a in alias_names]

@@ -10,7 +10,7 @@ from fastapi import APIRouter, File, HTTPException, Query, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.orm import joinedload, selectinload
 
-from api.db import NOT_FOUND_RESPONSE, DbSession
+from api.db import NOT_FOUND_RESPONSE, DbSession, apply_updates
 from api.models import Recipe, RecipeIngredient
 from api.schemas import (
     PaginatedRecipes,
@@ -143,8 +143,7 @@ def update_recipe(recipe_id: uuid.UUID, data: RecipeUpdate, db: DbSession):
             db, recipe, cast(list[RecipeIngredientInput], data.ingredients)
         )
         del payload["ingredients"]
-    for field, value in payload.items():
-        setattr(recipe, field, value)
+    apply_updates(recipe, payload)
 
     db.commit()
     return _load_recipe(db, recipe.id)
