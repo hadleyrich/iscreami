@@ -1,7 +1,7 @@
 # Atlas — Code Quality Findings
 
 ## 2026-09-10
-- Triplicated PATCH-apply loop (`for k, v in payload.items(): setattr(obj, k, v)`) in `update_ingredient` (ingredients.py), `update_profile` (profiles.py), and `update_recipe` (recipes.py). Extracted shared `apply_updates()` helper into `db.py` (alongside `commit_or_conflict`). Opened PR #__PRNUM__.
+- Triplicated PATCH-apply loop (`for k, v in payload.items(): setattr(obj, k, v)`) in `update_ingredient` (ingredients.py), `update_profile` (profiles.py), and `update_recipe` (recipes.py). Extracted shared `apply_updates()` helper into `db.py` (alongside `commit_or_conflict`). Opened PR #213.
 
 ## 2026-09-09
 - Duplicated `try/except IntegrityError` commit handler in `delete_ingredient` (`ingredients.py`) and `delete_profile` (`profiles.py`) — both rolled back and re-raised a 409 on FK-constraint-blocked deletes. Extracted shared `commit_or_conflict(db, message)` into `db.py`. Opened PR #209.
