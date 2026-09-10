@@ -1,5 +1,8 @@
 # Atlas — Code Quality Findings
 
+## 2026-09-11
+- Duplicated importer CLI driver: `usda_command` (usda.py) and `nzfcdb_command` (nzfcdb.py) had ~28 lines of identical list/id/all/usage dispatch + session handling each. Extracted shared `run_import_command()` into `cli/importers/driver.py`; added the missing `NZFCDBImporter.import_all()` (was list + per-item import_one loop), and declared `list_foods`/`import_all` as the CLI contract on `BaseImporter`. Opened PR #215.
+
 ## 2026-09-10
 - Triplicated PATCH-apply loop (`for k, v in payload.items(): setattr(obj, k, v)`) in `update_ingredient` (ingredients.py), `update_profile` (profiles.py), and `update_recipe` (recipes.py). Extracted shared `apply_updates()` helper into `db.py` (alongside `commit_or_conflict`). Opened PR #213.
 
