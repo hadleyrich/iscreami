@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import uuid
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import select
@@ -76,6 +77,16 @@ class BaseImporter(ABC):
     def map(self, raw: dict[str, Any]) -> IngredientCreate:
         """Map raw source data to our IngredientCreate schema."""
         ...
+
+    def list_foods(self) -> list[tuple[str, str]]:
+        """List (id, name) pairs available for import — CLI importers must override."""
+        raise NotImplementedError
+
+    def import_all(
+        self, skip_existing: bool = True
+    ) -> Iterator[tuple[str, Ingredient | None]]:
+        """Import every available item, yielding (name, ingredient) — skipped items yield (name, None). CLI importers must override."""
+        raise NotImplementedError
 
     def import_one(
         self, source_id: str, skip_existing: bool = True

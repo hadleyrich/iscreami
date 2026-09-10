@@ -19,9 +19,9 @@ if TYPE_CHECKING:
 import ijson  # type: ignore[import-untyped]
 import typer
 
-from api.db import SessionLocal
 from api.schemas import IngredientCreate
 from cli.importers.base import BaseImporter
+from cli.importers.driver import run_import_command
 
 if TYPE_CHECKING:
     from api.models import Ingredient
@@ -219,30 +219,10 @@ def usda_command(
     ),
 ) -> None:
     """Import ingredients from a USDA FoodData Central bulk JSON (Foundation, Survey, or Branded)."""
-    db = SessionLocal()
-    try:
-        importer = USDAImporter(db, json_file)
-
-        if list_only:
-            for fid, name in importer.list_foods():
-                typer.echo(f"{fid}: {name}")
-        elif fdc_id:
-            result = importer.import_one(fdc_id)
-            if result:
-                typer.echo(f"Imported: {result.name}")
-            else:
-                typer.echo(f"Skipped (already exists): {fdc_id}")
-            db.commit()
-        elif all_foods:
-            count = 0
-            for name, result in importer.import_all():
-                if result:
-                    typer.echo(f"  + {name}")
-                    count += 1
-            typer.echo(f"Imported {count} ingredients.")
-            db.commit()
-        else:
-            typer.echo("Specify --fdc-id, --all, or --list")
-            raise typer.Exit(1)
-    finally:
-        db.close()
+    run_import_command(
+        make_importer=lambda db: USDAImporter(db, json_file),
+        target_id=fdc_id,
+        all_foods=all_foods,
+        list_only=list_only,
+        id_option="fdc-id",
+    )
