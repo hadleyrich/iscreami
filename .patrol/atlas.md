@@ -1,7 +1,7 @@
 # Atlas — Code Quality Findings
 
 ## 2026-09-12
-- 10 near-identical `onDelete` handlers in `ProfileFormModal.tsx` each repeated `setForm((prev) => ({ ...prev, X_min: "", X_max: "" }))`, differing only in the metric's field pair. Extracted a shared `resetPair(stem)` helper; all 10 call sites now use `resetPair("sugar")` / `resetPair("milk_fat")` etc. Opened PR #TBD.
+- 10 near-identical `onDelete` handlers in `ProfileFormModal.tsx` each repeated `setForm((prev) => ({ ...prev, X_min: "", X_max: "" }))`, differing only in the metric's field pair. Extracted a shared `resetPair(stem)` helper; all 10 call sites now use `resetPair("sugar")` / `resetPair("milk_fat")` etc. Opened PR #218.
 
 ## 2026-09-11
 - Duplicated importer CLI driver: `usda_command` (usda.py) and `nzfcdb_command` (nzfcdb.py) had ~28 lines of identical list/id/all/usage dispatch + session handling each. Extracted shared `run_import_command()` into `cli/importers/driver.py`; added the missing `NZFCDBImporter.import_all()` (was list + per-item import_one loop), and declared `list_foods`/`import_all` as the CLI contract on `BaseImporter`. Opened PR #215. Review flagged the extracted driver + new import_all as untested; added coverage in PR #215 (driver dispatch / commit-on-write vs no-commit-on-read / Exit(1), and import_all's chapter filter + skip_existing yields).
