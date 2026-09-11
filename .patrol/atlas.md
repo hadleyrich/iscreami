@@ -1,5 +1,9 @@
 # Atlas — Code Quality Findings
 
+## 2026-09-11
+- Duplicated importer CLI driver: `usda_command` (usda.py) and `nzfcdb_command` (nzfcdb.py) had ~28 lines of identical list/id/all/usage dispatch + session handling each. Extracted shared `run_import_command()` into `cli/importers/driver.py`; added the missing `NZFCDBImporter.import_all()` (was list + per-item import_one loop), and declared `list_foods`/`import_all` as the CLI contract on `BaseImporter`. Opened PR #215. Review flagged the extracted driver + new import_all as untested; added coverage in PR #215 (driver dispatch / commit-on-write vs no-commit-on-read / Exit(1), and import_all's chapter filter + skip_existing yields).
+- LESSON: when extracting duplicated logic into a shared helper, the extraction makes that helper a single point of failure for every consumer — it must ship WITH tests, else all callers share one untested path. The old duplicated branches were also untested (no coverage regression), but a reviewer rightfully held the merge on the shared code because it now serves both CLIs.
+
 ## 2026-09-10
 - Triplicated PATCH-apply loop (`for k, v in payload.items(): setattr(obj, k, v)`) in `update_ingredient` (ingredients.py), `update_profile` (profiles.py), and `update_recipe` (recipes.py). Extracted shared `apply_updates()` helper into `db.py` (alongside `commit_or_conflict`). Opened PR #213.
 

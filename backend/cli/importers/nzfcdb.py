@@ -5,14 +5,18 @@ Parses .FT (tilde-delimited) files from NZ FOODfiles.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import typer
 
-from api.db import SessionLocal
 from api.schemas import IngredientCreate
 from cli.importers.base import BaseImporter
+from cli.importers.driver import run_import_command
+
+if TYPE_CHECKING:
+    from api.models import Ingredient
 
 # Mapping from NZFCDB nutrient component codes → iscreami fields
 NUTRIENT_MAP: dict[str, str] = {
@@ -237,6 +241,28 @@ class NZFCDBImporter(BaseImporter):
             if fid and fid[0].upper() not in EXCLUDED_CHAPTERS
         ]
 
+    def import_all(
+        self, skip_existing: bool = True
+    ) -> Iterator[tuple[str, Ingredient | None]]:
+        """Import all foods relevant to ice cream — excluded chapters filtered out.
+
+        Mirrors USDAImporter.import_all: single pass over the cached food
+        records, no per-item rescans.
+        """
+        self._load()
+        for food_id, food in sorted(self._foods.items()):
+            if not food_id or food_id[0].upper() in EXCLUDED_CHAPTERS:
+                continue
+            name = str(food.get("Food Name") or food_id)
+            if skip_existing and self._ingredient_exists(food_id):
+                yield name, None
+                continue
+            raw = self.fetch(food_id)
+            schema = self.map(raw)
+            ingredient = self._build_ingredient(schema, food_id)
+            self.db.add(ingredient)
+            yield name, ingredient
+
 
 def nzfcdb_command(
     data_dir: Path = typer.Option(..., help="Path to NZ FOODfiles directory"),
@@ -247,31 +273,10 @@ def nzfcdb_command(
     ),
 ) -> None:
     """Import ingredients from NZ Food Composition Database .FT files."""
-    db = SessionLocal()
-    try:
-        importer = NZFCDBImporter(db, data_dir)
-
-        if list_only:
-            for fid, name in importer.list_foods():
-                typer.echo(f"{fid}: {name}")
-        elif food_id:
-            result = importer.import_one(food_id)
-            if result:
-                typer.echo(f"Imported: {result.name}")
-            else:
-                typer.echo(f"Skipped (already exists): {food_id}")
-            db.commit()
-        elif all_foods:
-            count = 0
-            for fid, name in importer.list_foods():
-                result = importer.import_one(fid)
-                if result:
-                    typer.echo(f"  + {name}")
-                    count += 1
-            typer.echo(f"Imported {count} ingredients.")
-            db.commit()
-        else:
-            typer.echo("Specify --food-id, --all, or --list")
-            raise typer.Exit(1)
-    finally:
-        db.close()
+    run_import_command(
+        make_importer=lambda db: NZFCDBImporter(db, data_dir),
+        target_id=food_id,
+        all_foods=all_foods,
+        list_only=list_only,
+        id_option="food-id",
+    )
