@@ -1,7 +1,7 @@
 # Atlas — Code Quality Findings
 
 ## 2026-09-13
-- Duplicated "sugar breakdown vs total_sugar-as-sucrose" fallback decision in `ingredient_pac` (pac.py) and `ingredient_pod` (sweetness.py) — each re-derived the per-sugar fields dict and re-implemented the same break-down presence check + fallback. Extracted shared `sugar_contributions_per_100g()` into `models.py` (next to the `SUGAR_FIELDS` single-source-of-truth it built on); both PAC and POD now derive from it so the fallback can't drift between the two paths.
+- Duplicated "sugar breakdown vs total_sugar-as-sucrose" fallback decision in `ingredient_pac` (pac.py) and `ingredient_pod` (sweetness.py) — each re-derived the per-sugar fields dict and re-implemented the same break-down presence check + fallback. Extracted shared `sugar_contributions_per_100g()` into `models.py` (next to the `SUGAR_FIELDS` single-source-of-truth it built on); both PAC and POD now derive from it so the fallback can't drift between the two paths. Opened PR #220.
 
 ## 2026-09-11
 - Duplicated importer CLI driver: `usda_command` (usda.py) and `nzfcdb_command` (nzfcdb.py) had ~28 lines of identical list/id/all/usage dispatch + session handling each. Extracted shared `run_import_command()` into `cli/importers/driver.py`; added the missing `NZFCDBImporter.import_all()` (was list + per-item import_one loop), and declared `list_foods`/`import_all` as the CLI contract on `BaseImporter`. Opened PR #215. Review flagged the extracted driver + new import_all as untested; added coverage in PR #215 (driver dispatch / commit-on-write vs no-commit-on-read / Exit(1), and import_all's chapter filter + skip_existing yields).
