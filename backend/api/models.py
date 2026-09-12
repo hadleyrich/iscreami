@@ -113,6 +113,25 @@ class Ingredient(Base):
     )
 
 
+def sugar_contributions_per_100g(ingredient: Ingredient) -> list[tuple[str, float]]:
+    """Sugar contribution as (name, g per 100g) pairs for PAC/POD calculation.
+
+    Uses the per-sugar breakdown when any field is populated (zeroes ignored);
+    otherwise falls back to treating ``total_sugar_pct`` as pure sucrose.
+    Returns an empty list when no sugar data is present.
+    """
+    sugar_fields = {name: getattr(ingredient, f"{name}_pct") for name in SUGAR_FIELDS}
+    if any(v is not None for v in sugar_fields.values()):
+        return [
+            (name, float(pct))
+            for name, pct in sugar_fields.items()
+            if pct is not None and pct > 0
+        ]
+    if ingredient.total_sugar_pct is not None:
+        return [("sucrose", float(ingredient.total_sugar_pct))]
+    return []
+
+
 class IngredientAlias(Base):
     __tablename__ = "ingredient_aliases"
 

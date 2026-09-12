@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from api.models import SUGAR_FIELDS
+from api.models import sugar_contributions_per_100g
 
 if TYPE_CHECKING:
     from api.models import Ingredient
@@ -35,16 +35,11 @@ def ingredient_pod(ingredient: Ingredient) -> float:
 
     pod = 0.0
 
-    sugar_fields = {name: getattr(ingredient, f"{name}_pct") for name in SUGAR_FIELDS}
-
-    has_breakdown = any(v is not None for v in sugar_fields.values())
-
-    if has_breakdown:
-        for sugar_name, pct in sugar_fields.items():
-            if pct is not None and pct > 0:
-                pod += float(pct) * POD_FACTORS[sugar_name]
-    elif ingredient.total_sugar_pct is not None:
-        pod = float(ingredient.total_sugar_pct) * POD_FACTORS["sucrose"]
+    # Sugar contribution (per-sugar breakdown if present, else total_sugar as
+    # sucrose) — shared with pac.py so the fallback can't drift between the
+    # POD and PAC paths.
+    for sugar_name, pct in sugar_contributions_per_100g(ingredient):
+        pod += pct * POD_FACTORS[sugar_name]
 
     return pod
 
