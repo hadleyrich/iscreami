@@ -194,6 +194,15 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
     };
   }
 
+  // Clear a single metric's min/max pair, e.g. resetPair("sugar") clears sugar_min/sugar_max.
+  const resetPair = (stem: string) => () => {
+    setForm((prev) => ({
+      ...prev,
+      [`${stem}_min`]: "",
+      [`${stem}_max`]: "",
+    }));
+  };
+
   function handleClearTargets() {
     setForm((prev) => ({
       ...prev,
@@ -354,13 +363,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.sugar_max}
                 onMinChange={numChange("sugar_min")}
                 onMaxChange={numChange("sugar_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    sugar_min: "",
-                    sugar_max: "",
-                  }));
-                }}
+                onDelete={resetPair("sugar")}
                 minError={errors.sugar_min}
                 maxError={errors.sugar_max}
               />
@@ -371,13 +374,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.sweetness_max}
                 onMinChange={numChange("sweetness_min")}
                 onMaxChange={numChange("sweetness_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    sweetness_min: "",
-                    sweetness_max: "",
-                  }));
-                }}
+                onDelete={resetPair("sweetness")}
                 minError={errors.sweetness_min}
                 maxError={errors.sweetness_max}
               />
@@ -390,13 +387,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.milk_fat_max}
                 onMinChange={numChange("milk_fat_min")}
                 onMaxChange={numChange("milk_fat_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    milk_fat_min: "",
-                    milk_fat_max: "",
-                  }));
-                }}
+                onDelete={resetPair("milk_fat")}
                 minError={errors.milk_fat_min}
                 maxError={errors.milk_fat_max}
               />
@@ -407,13 +398,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.msnf_max}
                 onMinChange={numChange("msnf_min")}
                 onMaxChange={numChange("msnf_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    msnf_min: "",
-                    msnf_max: "",
-                  }));
-                }}
+                onDelete={resetPair("msnf")}
                 minError={errors.msnf_min}
                 maxError={errors.msnf_max}
               />
@@ -426,13 +411,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.stabilizer_max}
                 onMinChange={numChange("stabilizer_min")}
                 onMaxChange={numChange("stabilizer_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    stabilizer_min: "",
-                    stabilizer_max: "",
-                  }));
-                }}
+                onDelete={resetPair("stabilizer")}
                 minError={errors.stabilizer_min}
                 maxError={errors.stabilizer_max}
               />
@@ -443,13 +422,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.emulsifier_max}
                 onMinChange={numChange("emulsifier_min")}
                 onMaxChange={numChange("emulsifier_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    emulsifier_min: "",
-                    emulsifier_max: "",
-                  }));
-                }}
+                onDelete={resetPair("emulsifier")}
                 minError={errors.emulsifier_min}
                 maxError={errors.emulsifier_max}
               />
@@ -462,13 +435,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.serving_temp_max}
                 onMinChange={numChange("serving_temp_min")}
                 onMaxChange={numChange("serving_temp_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    serving_temp_min: "",
-                    serving_temp_max: "",
-                  }));
-                }}
+                onDelete={resetPair("serving_temp")}
                 minError={errors.serving_temp_min}
                 maxError={errors.serving_temp_max}
               />
@@ -479,13 +446,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.total_solids_max}
                 onMinChange={numChange("total_solids_min")}
                 onMaxChange={numChange("total_solids_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    total_solids_min: "",
-                    total_solids_max: "",
-                  }));
-                }}
+                onDelete={resetPair("total_solids")}
                 minError={errors.total_solids_min}
                 maxError={errors.total_solids_max}
               />
@@ -498,13 +459,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.total_fat_max}
                 onMinChange={numChange("total_fat_min")}
                 onMaxChange={numChange("total_fat_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    total_fat_min: "",
-                    total_fat_max: "",
-                  }));
-                }}
+                onDelete={resetPair("total_fat")}
                 minError={errors.total_fat_min}
                 maxError={errors.total_fat_max}
               />
@@ -515,13 +470,7 @@ export function ProfileFormModal({ open, profile, onClose }: Readonly<Props>) {
                 maxValue={form.alcohol_max}
                 onMinChange={numChange("alcohol_min")}
                 onMaxChange={numChange("alcohol_max")}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    alcohol_min: "",
-                    alcohol_max: "",
-                  }));
-                }}
+                onDelete={resetPair("alcohol")}
                 minError={errors.alcohol_min}
                 maxError={errors.alcohol_max}
               />
