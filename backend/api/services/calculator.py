@@ -137,6 +137,11 @@ def calculate_sweetness(
             if val is not None and val > 0:
                 sweet_g += float(val) * weight_g / 100.0
 
+        # Fallback is value-based (total sugar when nothing summed), unlike the
+        # presence-based trigger in sugar_contributions_per_100g() (models.py),
+        # which PAC/POD use. On an all-zero breakdown these disagree: this path
+        # applies total_sugar as sucrose, PAC/POD do not. Pre-existing divergence;
+        # keep in sync if consolidating the fallback decision.
         if sweet_g <= 0 and ingredient.total_sugar_pct:
             sweet_g = float(ingredient.total_sugar_pct) * weight_g / 100.0
 
