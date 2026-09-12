@@ -1,5 +1,10 @@
 # Atlas — Code Quality Findings
 
+## 2026-09-13
+- Duplicated "sugar breakdown vs total_sugar-as-sucrose" fallback decision in `ingredient_pac` (pac.py) and `ingredient_pod` (sweetness.py) — each re-derived the per-sugar fields dict and re-implemented the same break-down presence check + fallback. Extracted shared `sugar_contributions_per_100g()` into `models.py` (next to the `SUGAR_FIELDS` single-source-of-truth it built on); both PAC and POD now derive from it so the fallback can't drift between the two paths. Opened PR #220.
+- Per review on PR #220, shipped direct tests for `sugar_contributions_per_100g()` in `tests/test_sugar_contributions.py` pinning the four cases: breakdown pairs in field order, total_sugar fallback as pure sucrose, empty when no data, and the subtle all-zero-breakdown edge (present-but-zero breakdown wins over the total_sugar fallback). Also added a comment in `calculator.py::calculate_sweetness` noting its fallback is value-based (sum <= 0) whereas the helper's is presence-based — the two disagree on an all-zero breakdown; divergence pre-exists the extraction, documented not fixed.
+- LESSON: `calculate_sweetness` (calculator.py) is a THIRD consumer of the breakdown-vs-fallback shape (same logic as the extracted helper but with value-based rather than presence-based trigger). When consolidating a fallback decision, enumerate ALL callers, not just the two extractors — add `SUGAR_FIELDS` consumers (grep `api.models`) to the extraction checklist.
+
 ## 2026-09-12
 - 10 near-identical `onDelete` handlers in `ProfileFormModal.tsx` each repeated `setForm((prev) => ({ ...prev, X_min: "", X_max: "" }))`, differing only in the metric's field pair. Extracted a shared `resetPair(stem)` helper; all 10 call sites now use `resetPair("sugar")` / `resetPair("milk_fat")` etc. Opened PR #218.
 
