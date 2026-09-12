@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from api.models import SUGAR_FIELDS
+from api.models import sugar_contributions_per_100g
 
 if TYPE_CHECKING:
     from api.models import Ingredient
@@ -46,19 +46,11 @@ def ingredient_pac(ingredient: Ingredient) -> float:
 
     pac = 0.0
 
-    # Check if we have any sugar breakdown data
-    sugar_fields = {name: getattr(ingredient, f"{name}_pct") for name in SUGAR_FIELDS}
-
-    has_breakdown = any(v is not None for v in sugar_fields.values())
-
-    if has_breakdown:
-        # Advanced mode: use individual sugar PAC factors
-        for sugar_name, pct in sugar_fields.items():
-            if pct is not None and pct > 0:
-                pac += float(pct) * PAC_FACTORS[sugar_name] / 100.0
-    elif ingredient.total_sugar_pct is not None:
-        # Simple mode: treat all sugar as sucrose
-        pac += float(ingredient.total_sugar_pct) * PAC_FACTORS["sucrose"] / 100.0
+    # Sugar contribution (per-sugar breakdown if present, else total_sugar as
+    # sucrose) — shared with sweetness.py so the fallback can't drift between
+    # the PAC and POD paths.
+    for sugar_name, pct in sugar_contributions_per_100g(ingredient):
+        pac += pct * PAC_FACTORS[sugar_name] / 100.0
 
     # Sodium contribution (converted to NaCl equivalent)
     if ingredient.sodium_mg is not None and ingredient.sodium_mg > 0:
