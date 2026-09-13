@@ -169,3 +169,6 @@
 
 ## 2026-09-05
 - Duplicated `uuid.UUID(...)` + `try/except (ValueError, TypeError)` idiom in `export.py` — `_validate_ingredient` and `_resolve_import_ingredient` both parsed an imported ingredient ID with the same fallback. Extracted shared `_safe_uuid()` helper so the pattern can't drift between the two import paths. Opened PR #200.
+## 2026-09-14
+- Swallowed not-found error in importer CLI: `USDAImporter.fetch()` and `NZFCDBImporter.fetch()` returned an empty record for an unknown ID; `import_one()` mapped it into a phantom ingredient ("USDA ?" / "NZFCDB <id>") with no composition data, and the CLI driver committed it — a typo'd `--fdc-id`/`--food-id` silently corrupted the ingredients table. Both `fetch()`s now raise `ValueError`; added regression tests asserting the error and that no row is added. Opened PR #222.
+- LESSON: the BaseImporter contract (`import_one` → `fetch` → `map` → add) assumed `fetch` failing means "no data", which `map()` happily turned into a real ORM row. When a shared pipeline treats "not found" as a value, every consumer inherits the silent failure — the emptiest possible return value was the most dangerous one.

@@ -133,11 +133,16 @@ class USDAImporter(BaseImporter):
             yield from ijson.items(f, f"{array_key}.item")
 
     def fetch(self, source_id: str) -> dict[str, Any]:
-        """Scan through the file to find a food by fdcId."""
+        """Scan through the file to find a food by fdcId.
+
+        Raises ValueError if the FDC ID is not in the file rather than
+        returning an empty dict — import_one() would otherwise map the
+        empty record into a phantom "USDA ?" ingredient and commit it.
+        """
         for food in self._stream_foods():
             if str(int(food.get("fdcId") or 0)) == source_id:
                 return food
-        return {}
+        raise ValueError(f"FDC ID {source_id} not found in {self.json_file}")
 
     def map(self, raw: dict[str, Any]) -> IngredientCreate:
         name = raw.get("description", f"USDA {raw.get('fdcId', '?')}")

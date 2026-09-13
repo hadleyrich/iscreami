@@ -197,8 +197,16 @@ class NZFCDBImporter(BaseImporter):
         self._loaded = True
 
     def fetch(self, source_id: str) -> dict[str, Any]:
+        """Fetch raw data for a single food ID.
+
+        Raises ValueError for an unknown ID rather than returning empty
+        food data — import_one() would otherwise map it into a phantom
+        "NZFCDB <id>" ingredient and commit it.
+        """
         self._load()
-        food = self._foods.get(source_id, {})
+        food = self._foods.get(source_id)
+        if food is None:
+            raise ValueError(f"Food ID {source_id} not found in {self.data_dir}")
         nutrients = self._nutrients.get(source_id, {})
         return {"food": food, "nutrients": nutrients, "source_id": source_id}
 
