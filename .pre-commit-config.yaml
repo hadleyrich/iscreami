@@ -38,6 +38,7 @@ repos:
   hooks:
   - id: check-merge-conflict
   - id: check-yaml
+    args: ["--multi"]  # pnpm>=12 lockfiles are legitimately two YAML documents (env doc + packages)
   - id: check-json
     exclude: ^\.vscode/
   - id: trailing-whitespace
