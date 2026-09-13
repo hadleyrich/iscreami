@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import uuid
 from pathlib import Path
 from types import SimpleNamespace
@@ -16,6 +17,7 @@ from api.schemas import IngredientCreate
 from cli.importers.base import BaseImporter
 from cli.importers.driver import run_import_command
 from cli.importers.nzfcdb import NZFCDBImporter
+from cli.importers.usda import USDAImporter
 
 
 class DummyImporter(BaseImporter):
@@ -49,6 +51,36 @@ def test_import_one_skip_existing_detects_existing_source_row(test_db):
 
     second = importer.import_one("abc-123")
     assert second is None
+
+
+def _write_foundation_json(tmp_path, rows: list[dict]) -> Path:
+    """Write a minimal USDA Foundation Foods JSON file."""
+    json_file = tmp_path / "foundation.json"
+    json_file.write_text(json.dumps({"FoundationFoods": rows}), encoding="utf-8")
+    return json_file
+
+
+def test_usda_import_one_unknown_id_raises(test_db, tmp_path):
+    json_file = _write_foundation_json(tmp_path, [{"fdcId": 1, "description": "Milk"}])
+    importer = USDAImporter(test_db, json_file)
+
+    with pytest.raises(ValueError, match="999 not found"):
+        importer.import_one("999", skip_existing=False)
+
+    # Nothing was added to the session — no phantom "USDA ?" row.
+    assert test_db.scalars(select(Ingredient)).all() == []
+
+
+def test_nzfcdb_import_one_unknown_id_raises(test_db, tmp_path):
+    data_dir = tmp_path / "nzfcdb"
+    _write_name_ft(data_dir, ["F101~Whole milk"])
+    importer = NZFCDBImporter(test_db, data_dir)
+
+    with pytest.raises(ValueError, match="M999 not found"):
+        importer.import_one("M999", skip_existing=False)
+
+    # Nothing was added to the session — no phantom "NZFCDB M999" row.
+    assert test_db.scalars(select(Ingredient)).all() == []
 
 
 # --- Shared CLI driver (run_import_command) ---
