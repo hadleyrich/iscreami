@@ -21,7 +21,6 @@ frontend/dist/
 *.html
 *.json
 !frontend/package.json
-!frontend/package-lock.json
 !frontend/tsconfig*.json
 !frontend/vite.config.ts
 !backend/pyproject.toml

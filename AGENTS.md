@@ -99,3 +99,4 @@ When adding new solute types, update both `PAC_FACTORS` in `services/pac.py` **a
 - Required: `DATABASE_URL=postgresql://user:***@host:5432/iscreami`
 - Optional: `CORS_ORIGINS` (comma-separated), `SERVING_SIZE_G` (default 66)
 - **Critical**: `load_dotenv()` must be called before any import that reads `os.environ` (e.g. `db.py` reads `DATABASE_URL` at import time)
+- Python is pinned in `backend/.python-version` (3.14). `uv sync` and CI both honour it; keep it in step with the `PYTHON_IMAGE` minor in the `Dockerfile` and update both when bumping the base image. Without it uv resolves to the newest CPython satisfying `requires-python` (>=3.13), which is how CI broke when 3.15 shipped ahead of a `psycopg-binary` wheel.
