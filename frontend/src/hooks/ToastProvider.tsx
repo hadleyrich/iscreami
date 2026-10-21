@@ -1,5 +1,4 @@
 import {
-  createContext,
   useCallback,
   useMemo,
   useRef,
@@ -7,8 +6,8 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
-
-type ToastType = "error" | "warning" | "info" | "success";
+import { ToastContext } from "./toastContext";
+import type { ToastType } from "./toastContext";
 
 interface Toast {
   id: number;
@@ -16,12 +15,6 @@ interface Toast {
   type: ToastType;
   dismissing?: boolean;
 }
-
-export interface ToastContextValue {
-  addToast: (message: string, type?: ToastType) => void;
-}
-
-const ToastContext = createContext<ToastContextValue | null>(null);
 
 const ALERT_CLASS: Record<ToastType, string> = {
   error: "alert-error",
@@ -94,5 +87,3 @@ export function ToastProvider({ children }: Readonly<{ children: React.ReactNode
     </ToastContext.Provider>
   );
 }
-
-export { ToastContext };
