@@ -74,11 +74,11 @@ uv run uvicorn api.app:app --reload
 
 The `.env` file lives in the **repo root** and is loaded automatically by Pydantic Settings in `api/settings.py`. The `settings` object is imported by `app.py` and `cli/main.py`, which auto-loads the `.env` file.
 
-| Variable         | Required | Default                                | Description                                     |
-| ---------------- | -------- | -------------------------------------- | ----------------------------------------------- |
-| `DATABASE_URL`   | Yes      | `postgresql://localhost:5432/iscreami` | PostgreSQL connection string                    |
-| `CORS_ORIGINS`   | No       | `*`                                    | Comma-separated list of allowed CORS origins    |
-| `SERVING_SIZE_G` | No       | `66`                                   | Default serving size for nutrition calculations |
+| Variable         | Required | Default                                        | Description                                     |
+| ---------------- | -------- | ---------------------------------------------- | ----------------------------------------------- |
+| `DATABASE_URL`   | Yes      | `postgresql+psycopg://localhost:5432/iscreami` | PostgreSQL connection string                    |
+| `CORS_ORIGINS`   | No       | `*`                                            | Comma-separated list of allowed CORS origins    |
+| `SERVING_SIZE_G` | No       | `66`                                           | Default serving size for nutrition calculations |
 
 > Environment variables are **type-validated at startup** by Pydantic Settings. If any required variable is missing or invalid, the application will fail immediately with a clear error message.
 
@@ -386,6 +386,9 @@ uv run python -m cli.main <command>
 ### Available Commands
 
 ```bash
+# Apply schema migrations (default target: head; pass a revision to stop earlier)
+uv run python -m cli.main db upgrade
+
 # Seed categories, target profiles, and ~40 common ingredients
 uv run python -m cli.main seed
 

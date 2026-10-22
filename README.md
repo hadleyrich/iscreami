@@ -38,14 +38,30 @@ The project is based on similar work I have written in the past, and all code is
 
 ## Running it
 
-Requires PostgreSQL and is served from a single Docker container:
+Requires PostgreSQL and is served from a single Docker container.
+
+The container does **not** create the schema or seed data on start — the app comes up expecting a
+migrated database, so run the bootstrap step once on first install (and again after each upgrade,
+before starting the new image):
 
 ```bash
 cp .env.example .env
-# Set DATABASE_URL in .env, then:
+# Set DATABASE_URL in .env
+
 docker build -t iscreami .
-docker run -e DATABASE_URL=postgresql+psycopg://user:pass@db:5432/iscreami -p 8000:8000 iscreami
+
+# Create/upgrade the schema and seed categories, target profiles and ~40 common
+# ingredients. Idempotent: safe to re-run, existing rows are left alone.
+docker run --rm --env-file .env iscreami \
+  sh -c "python -m cli.main db upgrade && python -m cli.main seed all"
+
+# Start the app
+docker run --env-file .env -p 8000:8000 iscreami
 ```
+
+`DATABASE_URL` must be reachable from inside the container (e.g. `host.docker.internal` on Docker
+Desktop, or a database container on the same Docker network); `postgresql+psycopg://` is the
+expected scheme.
 
 Open **http://localhost:8000** in your browser.
 

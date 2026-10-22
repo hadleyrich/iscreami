@@ -25,6 +25,8 @@ frontend/dist/
 !frontend/vite.config.ts
 !backend/pyproject.toml
 !backend/alembic.ini
+# Loaded at runtime by `python -m cli.main seed`; without it seeding fails inside the image
+!backend/cli/seed-ingredients.json
 PAC discussion.txt
 What PAC Is*
 FoodData_Central*

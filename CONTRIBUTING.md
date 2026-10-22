@@ -135,9 +135,23 @@ To test the production Docker build locally:
 ```bash
 docker build -t iscreami .
 docker run \
-  -e DATABASE_URL=postgresql://user:pass@host.docker.internal:5432/iscreami \
+  -e DATABASE_URL=postgresql+psycopg://user:***@host.docker.internal:5432/iscreami \
   -p 8000:8000 \
   iscreami
+```
+
+The container runs the app only — it does not migrate or seed. Use the same image with a command
+override for the one-off bootstrap (safe to re-run, and required after any upgrade that adds a
+migration):
+
+```bash
+# Schema + default data
+docker run --rm -e DATABASE_URL=postgresql+psycopg://user:***@host.docker.internal:5432/iscreami \
+  iscreami sh -c "python -m cli.main db upgrade && python -m cli.main seed all"
+
+# Just the schema
+docker run --rm -e DATABASE_URL=postgresql+psycopg://user:***@host.docker.internal:5432/iscreami \
+  iscreami python -m cli.main db upgrade
 ```
 
 The container serves both the API (`/api/v1/*`) and the compiled frontend on port 8000.
