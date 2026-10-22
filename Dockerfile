@@ -45,9 +45,14 @@ RUN addgroup --system --gid 10001 app \
 # Copy dependency metadata first (better caching)
 COPY --chown=app:app backend/pyproject.toml backend/uv.lock ./backend/
 
-# Install Python deps with cache
+# Install Python deps with cache.
+# --no-build forces wheels only: the slim image has no C/Rust toolchain, so a
+# dependency without a wheel for the pinned CPython must fail here rather than
+# silently falling back to building from source (which is what broke the
+# Python 3.15 bump: pydantic-core had no cp315 wheel and maturin could not
+# find a linker).
 RUN --mount=type=cache,target=/root/.cache/uv \
-    cd backend && uv sync --no-dev --frozen --no-editable
+    cd backend && uv sync --no-dev --no-build --frozen --no-editable
 
 # Copy backend source
 COPY --chown=app:app backend/ ./backend/
