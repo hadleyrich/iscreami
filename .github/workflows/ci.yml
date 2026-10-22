@@ -37,6 +37,17 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      # The runtime image is python:*-slim with no C/Rust toolchain, so every
+      # runtime dependency must ship a wheel for the pinned CPython. Run the
+      # exact Docker install here too, before the slower lint/type/test steps:
+      # without --no-build a missing wheel silently builds from source (the
+      # ubuntu runner has a compiler) and only surfaces as a failed Docker build
+      # on main. UV_PROJECT_ENVIRONMENT keeps this from clobbering the dev venv.
+      - name: Wheel-only install check (runtime deps)
+        run: uv sync --no-dev --no-build --frozen --no-editable
+        env:
+          UV_PROJECT_ENVIRONMENT: /tmp/venv-wheelcheck
+
       - name: Lint (ruff)
         run: uv run ruff check .
 
