@@ -12,8 +12,12 @@ WORKDIR /app/frontend
 
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
 
-# Use pnpm version from frontend/package.json#packageManager via Corepack
-RUN corepack enable
+# Install pnpm at the version pinned in frontend/package.json#packageManager.
+# Node >= 25 ships without Corepack, so resolve the version explicitly instead
+# of relying on `corepack enable`.
+RUN PNPM_VERSION="$(node -p 'require("./package.json").packageManager.replace(/^pnpm@/, "")')" \
+    && npm install -g "pnpm@${PNPM_VERSION}" \
+    && pnpm --version
 
 # Install deps with cache
 RUN --mount=type=cache,target=/root/.pnpm-store \
