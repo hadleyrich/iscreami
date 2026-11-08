@@ -1,15 +1,11 @@
 name: Trivy
 
-# The scan itself lives in nice/workflows so every repo shares one verified
-# install chain and one policy. Triggers and concurrency stay here.
-
 on:
   push:
     branches:
       - main
   pull_request:
   schedule:
-    # Weekly re-scan: a CVE published against unchanged code should still surface.
     - cron: "0 18 * * 0"
   workflow_dispatch:
 
@@ -20,13 +16,161 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  COSIGN_VERSION: "3.1.1"
+  COSIGN_SHA256: "ae1ecd212663f3693ad9edf8b1a183900c9a52d3155ba6e354237f9a0f6463fc"
+
 jobs:
-  trivy:
-    name: Trivy
-    # Pinned by SHA because zizmor's unpinned-uses policy rejects a tag ref.
-    uses: nice/workflows/.gitea/workflows/trivy.yml@c44879043a98dc6deeca87384b9912268e2fb726 # v1
-    with:
-      # The runtime stage is python:3.15.2-slim, so the OS package layer is
-      # invisible to a filesystem scan. Runs on push + schedule only (a cold
-      # build per PR is not worth it for a base image that rarely changes).
-      scan_image: true
+  filesystem:
+    name: Vulnerability and secret scan
+    runs-on: ubuntu-latest
+    # A hung vulnerability-DB download must not hold a runner.
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install and verify Trivy
+        env:
+          TRIVY_VERSION: 0.76.2
+          BASEURL: https://github.com/aquasecurity/trivy/releases/download
+        run: |
+          set -euo pipefail
+          cosign_url="https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
+
+          curl -fsSL --proto '=https' "$cosign_url" -o /tmp/cosign
+          echo "${COSIGN_SHA256}  /tmp/cosign" | sha256sum -c -
+          install -m 0755 /tmp/cosign /usr/local/bin/cosign
+
+          curl -fsSL --proto '=https' \
+            "${BASEURL}/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_checksums.txt" -o /tmp/checksums.txt
+          curl -fsSL --proto '=https' \
+            "${BASEURL}/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_checksums.txt.sigstore.json" -o /tmp/checksums.txt.sigstore.json
+
+          # The checksums file is signed by trivy's release workflow; verify the
+          # identity, not just the signature, so another repo's workflow can't
+          # vouch for these bytes.
+          cosign verify-blob \
+            --bundle /tmp/checksums.txt.sigstore.json \
+            --certificate-identity \
+              "https://github.com/aquasecurity/trivy/.github/workflows/reusable-release.yaml@refs/tags/v${TRIVY_VERSION}" \
+            --certificate-oidc-issuer \
+              "https://token.actions.githubusercontent.com" \
+            /tmp/checksums.txt
+
+          tarball="trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          curl -fsSL --proto '=https' "${BASEURL}/v${TRIVY_VERSION}/${tarball}" -o "/tmp/${tarball}"
+          # --ignore-missing is safe here: with no matching file it exits 1
+          # ("no file was verified"), so a renamed asset cannot slip through.
+          ( cd /tmp && sha256sum -c --ignore-missing checksums.txt )
+          tar -xzf "/tmp/${tarball}" -C /usr/local/bin trivy
+          trivy --version
+
+      - name: Scan dependencies and secrets
+        env:
+          SEVERITY: CRITICAL,HIGH
+          IGNORE_UNFIXED: true
+        run: |
+          set -euo pipefail
+          args=(filesystem --scanners vuln,secret --severity "$SEVERITY" --exit-code 1 --quiet .)
+          if [ "$IGNORE_UNFIXED" = "true" ]; then
+            args+=(--ignore-unfixed)
+          fi
+          trivy "${args[@]}"
+
+      - name: Scan Dockerfile / compose misconfigurations
+        # Unconditional: `trivy config` only picks up IaC files it recognises
+        # (in these repos: just the Dockerfile), so a repo without one simply
+        # reports no targets. Avoids depending on hashFiles() being implemented
+        # by the runner.
+        env:
+          SEVERITY: CRITICAL,HIGH
+          FAIL_ON_CONFIG: false
+        run: |
+          set -euo pipefail
+          code=0
+          if [ "$FAIL_ON_CONFIG" = "true" ]; then
+            code=1
+          fi
+          trivy config --severity "$SEVERITY" --exit-code "$code" --quiet .
+
+  image:
+    name: Image scan
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install and verify Trivy
+        env:
+          TRIVY_VERSION: 0.76.2
+          BASEURL: https://github.com/aquasecurity/trivy/releases/download
+        run: |
+          set -euo pipefail
+          cosign_url="https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64"
+
+          curl -fsSL --proto '=https' "$cosign_url" -o /tmp/cosign
+          echo "${COSIGN_SHA256}  /tmp/cosign" | sha256sum -c -
+          install -m 0755 /tmp/cosign /usr/local/bin/cosign
+
+          curl -fsSL --proto '=https' \
+            "${BASEURL}/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_checksums.txt" -o /tmp/checksums.txt
+          curl -fsSL --proto '=https' \
+            "${BASEURL}/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_checksums.txt.sigstore.json" -o /tmp/checksums.txt.sigstore.json
+
+          cosign verify-blob \
+            --bundle /tmp/checksums.txt.sigstore.json \
+            --certificate-identity \
+              "https://github.com/aquasecurity/trivy/.github/workflows/reusable-release.yaml@refs/tags/v${TRIVY_VERSION}" \
+            --certificate-oidc-issuer \
+              "https://token.actions.githubusercontent.com" \
+            /tmp/checksums.txt
+
+          tarball="trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz"
+          curl -fsSL --proto '=https' "${BASEURL}/v${TRIVY_VERSION}/${tarball}" -o "/tmp/${tarball}"
+          ( cd /tmp && sha256sum -c --ignore-missing checksums.txt )
+          tar -xzf "/tmp/${tarball}" -C /usr/local/bin trivy
+          trivy --version
+
+      - name: Build image
+        env:
+          CONTEXT: .
+          DOCKERFILE: Dockerfile
+          BUILD_ARGS: ""
+        run: |
+          set -euo pipefail
+          args=()
+          while IFS= read -r line; do
+            [ -n "$line" ] && args+=(--build-arg "$line")
+          done <<< "$BUILD_ARGS"
+          docker build -t trivy-scan-target:ci \
+            -f "$DOCKERFILE" \
+            "${args[@]+"${args[@]}"}" \
+            "$CONTEXT"
+
+      - name: Scan image
+        env:
+          SEVERITY: CRITICAL,HIGH
+          IGNORE_UNFIXED: true
+          BLOCKING: false
+        run: |
+          set -euo pipefail
+          code=0
+          if [ "$BLOCKING" = "true" ]; then
+            code=1
+          fi
+          args=(image --scanners vuln --severity "$SEVERITY" --exit-code "$code" --quiet trivy-scan-target:ci)
+          if [ "$IGNORE_UNFIXED" = "true" ]; then
+            args+=(--ignore-unfixed)
+          fi
+          trivy "${args[@]}"

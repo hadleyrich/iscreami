@@ -65,6 +65,7 @@ COPY --chown=app:app backend/ ./backend/
 COPY --from=frontend-build --chown=app:app /app/frontend/dist ./frontend/dist
 
 # Switch to non-root user
+RUN rm -rf /usr/local/lib/python3.*/site-packages/pip* /usr/local/bin/pip*
 USER app
 
 # Environment
