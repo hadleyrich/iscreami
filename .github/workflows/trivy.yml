@@ -1,0 +1,32 @@
+name: Trivy
+
+# The scan itself lives in nice/workflows so every repo shares one verified
+# install chain and one policy. Triggers and concurrency stay here.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  schedule:
+    # Weekly re-scan: a CVE published against unchanged code should still surface.
+    - cron: "0 18 * * 0"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  trivy:
+    name: Trivy
+    # Pinned by SHA because zizmor's unpinned-uses policy rejects a tag ref.
+    uses: nice/workflows/.gitea/workflows/trivy.yml@c44879043a98dc6deeca87384b9912268e2fb726 # v1
+    with:
+      # The runtime stage is python:3.15.2-slim, so the OS package layer is
+      # invisible to a filesystem scan. Runs on push + schedule only (a cold
+      # build per PR is not worth it for a base image that rarely changes).
+      scan_image: true
