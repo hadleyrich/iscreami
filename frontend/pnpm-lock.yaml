@@ -174,7 +174,7 @@ importers:
         version: 5.107.1(@types/react@19.3.0)(react@19.3.1)
       daisyui:
         specifier: ^5.6.7
-        version: 5.7.50
+        version: 5.8.0
       lucide-react:
         specifier: ^1.23.0
         version: 1.70.0(@types/react@19.3.0)(react@19.3.1)
@@ -992,8 +992,8 @@ packages:
     resolution: {integrity: sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==}
     engines: {node: '>=12'}
 
-  daisyui@5.7.50:
-    resolution: {integrity: sha512-+/LRqnTCoc7s/bJEKKwtJSwzeXCVdAmRdNmZeZzgHCaQ9PJyl7j+2V2U32GQDMyD+VDkP9e/+JGoC72Y1hLk7w==}
+  daisyui@5.8.0:
+    resolution: {integrity: sha512-pIdff0OLXTgCNvbRZlY2W2qjCnJd7DgRLyTpzhHgg+JqMzVDsQoRzJXyDKyPCOUYvTFHlOt97+JCeGyxQav4Zw==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -2257,7 +2257,7 @@ snapshots:
 
   d3-timer@3.0.1: {}
 
-  daisyui@5.7.50: {}
+  daisyui@5.8.0: {}
 
   debug@4.4.3:
     dependencies:
